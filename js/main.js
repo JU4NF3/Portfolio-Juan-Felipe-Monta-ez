@@ -113,24 +113,31 @@
   }
 
   // --- Testimonials ---
+  // Each card sits in a .testimonial-orbit wrapper: on desktop that wrapper
+  // becomes a huge square whose rotation swings the card along a wide arc
+  // (animations.js). Without JS it's just a plain block.
   function renderTestimonials(testimonials) {
     var testimonialsGrid = document.querySelector("[data-testimonials-grid]");
     if (!testimonialsGrid || !testimonials) return;
-    testimonials.forEach(function (testimonial) {
-      var card = el("article", "testimonial-card");
-      card.innerHTML =
+    testimonials.forEach(function (testimonial, index) {
+      var orbit = el("div", "testimonial-orbit");
+      var stepLabel = "Testimonio " + String(index + 1).padStart(2, "0");
+      orbit.innerHTML =
+        '<article class="testimonial-card">' +
+        '<span class="testimonial-card__step">' + stepLabel + "</span>" +
         "<blockquote>“" + testimonial.quote + "”</blockquote>" +
-        "<footer><strong>" + testimonial.name + "</strong> — " + testimonial.role + "</footer>";
-      testimonialsGrid.appendChild(card);
+        "<footer><strong>" + testimonial.name + "</strong><span>" + testimonial.role + "</span></footer>" +
+        "</article>";
+      testimonialsGrid.appendChild(orbit);
     });
   }
 
-  // --- Partners ---
+  // --- Partners (inside the closing footer, a <ul>) ---
   function renderPartners(partners) {
     var partnerRow = document.querySelector("[data-partners-row]");
     if (!partnerRow || !partners) return;
     partners.forEach(function (name) {
-      var logo = el("span", "partner-logo", name);
+      var logo = el("li", "partner-logo", name);
       partnerRow.appendChild(logo);
     });
   }
@@ -165,4 +172,93 @@
   // works unchanged.
   window.PortfolioContentLoaded = Promise.resolve();
   markReady();
+})();
+
+/* About chips: infinite marquee with no empty gaps.
+   The loop moves the track by -50%, which is only seamless if half the
+   track is at least as wide as the visible area. So: measure one set,
+   clone it until half the track covers the container, then double that.
+   Rebuilt when the container width changes. Hovering ramps the speed down
+   to 25% (Web Animations playbackRate, so the position doesn't jump). */
+(function () {
+  var marquee = document.querySelector("[data-chip-marquee]");
+  if (!marquee) return;
+  var list = marquee.querySelector(".chip-list");
+  var originals = Array.prototype.slice.call(list.children);
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  var SPEED = 45; // px per second
+  var lastWidth = 0;
+
+  function build() {
+    var width = marquee.clientWidth;
+    if (!width || width === lastWidth) return;
+    lastWidth = width;
+
+    list.querySelectorAll("[data-chip-clone]").forEach(function (clone) {
+      clone.remove();
+    });
+    marquee.classList.remove("chip-marquee--ready");
+    if (reduceMotion.matches) return; // leave the chips wrapping, static
+
+    // One set's width, margins included (the list is max-content wide).
+    list.style.width = "max-content";
+    list.style.flexWrap = "nowrap";
+    var setWidth = list.scrollWidth;
+    list.style.width = "";
+    list.style.flexWrap = "";
+    if (!setWidth) return;
+
+    var setsPerHalf = Math.max(1, Math.ceil(width / setWidth));
+    for (var copy = 1; copy < setsPerHalf * 2; copy++) {
+      originals.forEach(function (chip) {
+        var clone = chip.cloneNode(true);
+        clone.setAttribute("aria-hidden", "true");
+        clone.setAttribute("data-chip-clone", "");
+        list.appendChild(clone);
+      });
+    }
+
+    list.style.setProperty("--marquee-duration", (setWidth * setsPerHalf) / SPEED + "s");
+    marquee.classList.add("chip-marquee--ready");
+  }
+
+  // Smoothly ramp the CSS animation's playbackRate toward a target.
+  var rampFrame = null;
+  function rampSpeed(target) {
+    var animation = list.getAnimations ? list.getAnimations()[0] : null;
+    if (!animation) return;
+    cancelAnimationFrame(rampFrame);
+    var from = animation.playbackRate;
+    var start = performance.now();
+    (function step(now) {
+      var t = Math.min((now - start) / 400, 1);
+      animation.playbackRate = from + (target - from) * t;
+      if (t < 1) rampFrame = requestAnimationFrame(step);
+    })(start);
+  }
+
+  marquee.addEventListener("mouseenter", function () {
+    rampSpeed(0.25);
+  });
+  marquee.addEventListener("mouseleave", function () {
+    rampSpeed(1);
+  });
+
+  build();
+  if (window.ResizeObserver) {
+    new ResizeObserver(build).observe(marquee);
+  } else {
+    window.addEventListener("resize", build);
+  }
+  // Chip widths change once the web font loads; re-measure then.
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function () {
+      lastWidth = 0;
+      build();
+    });
+  }
+  reduceMotion.addEventListener("change", function () {
+    lastWidth = 0;
+    build();
+  });
 })();

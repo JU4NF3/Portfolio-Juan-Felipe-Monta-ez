@@ -18,6 +18,19 @@
   height: 100%;
 }
 
+/* Scrim over the shader on the text side: the light bands drift behind
+   the copy, and at their brightest they'd wash out the paragraph. Also
+   fades the hero's bottom edge into the page background. */
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(10, 10, 10, 0.6) 0%, rgba(10, 10, 10, 0.25) 45%, transparent 70%),
+    linear-gradient(to top, var(--color-bg) 0%, transparent 25%);
+}
+
 .hero__content {
   position: relative;
   z-index: 1;
@@ -40,6 +53,8 @@
 .hero__subtitle {
   max-width: 560px;
   font-size: 1.125rem;
+  /* Always on the dark shader, in both themes. */
+  color: rgba(245, 245, 245, 0.85);
 }
 
 .hero__actions {

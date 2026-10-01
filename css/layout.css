@@ -29,8 +29,17 @@
   height: 20px;
 }
 
-/* --- Desktop pill nav, fixed bottom-center --- */
+/* --- Desktop pill nav, fixed bottom-center ---
+   Frosted glass: translucent fill + backdrop blur, so the page shows
+   through softly as it scrolls underneath. Glass colors are local tokens
+   because the pill floats over both dark and light/lime sections. */
 .nav-pill {
+  --glass-bg: rgba(0, 0, 0, 0.35);
+  --glass-border: rgba(255, 255, 255, 0.17);
+  --glass-hover: rgba(255, 255, 255, 0.1);
+  --glass-text: rgba(255, 255, 255, 0.78);
+  --glass-text-strong: #fff;
+
   position: fixed;
   left: 50%;
   bottom: var(--space-4);
@@ -40,25 +49,106 @@
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-2);
-  background: var(--color-bg-elevated);
-  border: 1px solid var(--color-border);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-pill);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.45);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  backdrop-filter: blur(14px) saturate(160%);
+}
+
+[data-theme="light"] .nav-pill {
+  --glass-bg: rgba(236, 236, 236, 0.45);
+  --glass-border: rgba(0, 0, 0, 0.08);
+  --glass-hover: rgba(0, 0, 0, 0.06);
+  --glass-text: rgba(20, 20, 20, 0.72);
+  --glass-text-strong: #141414;
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.16);
+}
+
+/* Browsers without backdrop-filter: a more opaque fill keeps text readable. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .nav-pill {
+    --glass-bg: rgba(18, 18, 18, 0.92);
+  }
+
+  [data-theme="light"] .nav-pill {
+    --glass-bg: rgba(247, 247, 245, 0.95);
+  }
 }
 
 .nav-pill__link {
+  position: relative;
+  z-index: 1; /* above the sliding indicator */
   padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-pill);
   text-decoration: none;
   font-size: var(--fs-small);
-  color: var(--color-text-muted);
-  transition: background-color 0.2s var(--ease-default), color 0.2s var(--ease-default);
+  white-space: nowrap;
+  color: var(--glass-text);
+  transition: color 0.3s var(--ease-default);
 }
 
+/* No hover background here: the sliding indicator previews the hovered
+   link instead (js/nav.js). Keyboard focus keeps its own fill, since the
+   indicator only follows the mouse. */
 .nav-pill__link:hover,
+.nav-pill__link[aria-current="true"] {
+  color: var(--glass-text-strong);
+}
+
 .nav-pill__link:focus-visible {
-  color: var(--color-text);
-  background: var(--color-bg-elevated-2);
+  color: var(--glass-text-strong);
+  background: var(--glass-hover);
+}
+
+/* Sliding "you are here" highlight. nav.js sets its size and position
+   (via --x / --y / width / height) to match the active link; the slightly
+   overshooting curve gives it a soft bounce when it lands. */
+.nav-pill__indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.14);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 0 16px rgba(198, 255, 61, 0.12);
+  opacity: 0;
+  transform: translate(var(--x, 0px), var(--y, 0px));
+  transition:
+    transform 0.55s cubic-bezier(0.34, 1.4, 0.64, 1),
+    width 0.55s cubic-bezier(0.34, 1.4, 0.64, 1),
+    opacity 0.3s var(--ease-default);
+  pointer-events: none;
+}
+
+.nav-pill__indicator.is-visible {
+  opacity: 1;
+}
+
+/* First placement: appear in place instead of sliding in from the corner. */
+.nav-pill__indicator.no-slide {
+  transition: opacity 0.3s var(--ease-default);
+}
+
+[data-theme="light"] .nav-pill__indicator {
+  border-color: rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Sections receive focus after an in-page jump (for keyboard and screen
+   reader users); don't draw a focus ring around the whole section. */
+main > section:focus,
+footer:focus {
+  outline: none;
+}
+
+.nav-pill .theme-toggle {
+  background: var(--glass-hover);
+  color: var(--glass-text-strong);
 }
 
 .nav-pill__cta {
@@ -218,57 +308,4 @@ section {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--color-accent);
-}
-
-/* --- Footer --- */
-.site-footer {
-  border-top: 1px solid var(--color-border);
-  padding: var(--space-6) 0 var(--space-7);
-}
-
-.site-footer__top {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: var(--space-4);
-  margin-bottom: var(--space-5);
-}
-
-.site-footer__social {
-  list-style: none;
-  display: flex;
-  gap: var(--space-3);
-  margin: 0;
-  padding: 0;
-}
-
-.site-footer__social a {
-  text-decoration: none;
-  color: var(--color-text-muted);
-}
-
-.site-footer__social a:hover,
-.site-footer__social a:focus-visible {
-  color: var(--color-text);
-}
-
-.site-footer__bottom {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: var(--space-3);
-  padding-top: var(--space-4);
-  border-top: 1px solid var(--color-border);
-  font-size: var(--fs-small);
-  color: var(--color-text-muted);
-}
-
-.site-footer__bottom a {
-  color: var(--color-text-muted);
-  text-decoration: none;
-}
-
-.site-footer__bottom a:hover,
-.site-footer__bottom a:focus-visible {
-  color: var(--color-text);
 }

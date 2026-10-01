@@ -1,17 +1,24 @@
-/* Hero WebGL shader — intentionally small ("toy" shader): a full-viewport
-   triangle with a fragment shader that mixes an animated gradient with
-   cheap hash-based noise. No libraries, plain `canvas.getContext('webgl')`.
+/* Hero WebGL shader — soft, slowly drifting bands of green light, plus a
+   glow that follows the cursor while it's over the hero. No libraries,
+   plain `canvas.getContext('webgl')`.
+
+   How the bands work: a few sine waves across x are summed; their phase is
+   bent by other sines over y and time, so the bands sway and breathe
+   instead of sliding. The sum is squared to keep the dark gaps wide and
+   the bright cores narrow, then mapped through a dark-green → lime palette.
+
+   Cursor glow: the mouse position (eased toward the real pointer each
+   frame, so it trails a little) adds light within a radius; u_hover fades
+   that glow in when the pointer enters the hero and out when it leaves.
 
    Degrades gracefully: the .hero section already has a CSS gradient behind
    the canvas (see hero.css), so if WebGL is unavailable or compilation
-   fails, we just bail out early and that gradient is all the visitor sees.
-
-   Future iteration ideas (not built now): real Perlin/simplex noise,
-   mouse-reactive uniform (u_mouse), color driven by the active theme. */
+   fails, we just bail out early and that gradient is all the visitor sees. */
 
 (function () {
   var canvas = document.querySelector("[data-hero-canvas]");
   if (!canvas) return;
+  var hero = canvas.closest(".hero") || canvas.parentElement;
 
   var gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
   if (!gl) return; // No WebGL support — CSS fallback gradient stays visible.
@@ -27,19 +34,44 @@
     "precision mediump float;",
     "uniform float u_time;",
     "uniform vec2 u_resolution;",
+    "uniform vec2 u_mouse;   // 0..1, origin bottom-left",
+    "uniform float u_hover;  // 0..1, glow strength",
     "",
     "float hash(vec2 p) {",
     "  return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);",
     "}",
     "",
+    "// Brightness of the light bands at uv (0 = dark gap, 1 = band core).",
+    "float bands(vec2 uv, float t) {",
+    "  float sway = sin(uv.y * 2.1 - t * 0.55) + 0.5 * sin(uv.y * 0.9 + t * 0.3 + 2.0);",
+    "  float w = sin(uv.x * 7.0 + sway * 1.3 + t * 0.6) * 0.6",
+    "          + sin(uv.x * 3.7 - sway * 0.7 + t * 0.4) * 0.45",
+    "          + sin(uv.x * 13.0 + sway * 0.4 - t * 0.25) * 0.18;",
+    "  return pow(clamp(w * 0.5 + 0.5, 0.0, 1.0), 2.0);",
+    "}",
+    "",
     "void main() {",
     "  vec2 uv = gl_FragCoord.xy / u_resolution.xy;",
-    "  float n = hash(uv * 3.0 + u_time * 0.05);",
-    "  vec3 colorA = vec3(0.05, 0.06, 0.05);",
-    "  vec3 colorB = vec3(0.776, 1.0, 0.239);",
-    "  float mixAmount = smoothstep(0.3, 0.9, uv.y + n * 0.08 + sin(u_time * 0.2) * 0.05);",
-    "  vec3 color = mix(colorA, colorB, mixAmount * 0.35);",
-    "  gl_FragColor = vec4(color, 1.0);",
+    "  float t = u_time * 0.3;",
+    "  float f = bands(uv, t);",
+    "",
+    "  // Cursor glow, round regardless of the canvas aspect ratio.",
+    "  vec2 aspect = vec2(u_resolution.x / u_resolution.y, 1.0);",
+    "  float d = distance(uv * aspect, u_mouse * aspect);",
+    "  f += smoothstep(0.45, 0.0, d) * 0.6 * u_hover;",
+    "",
+    "  vec3 deep   = vec3(0.020, 0.055, 0.020);",
+    "  vec3 mid    = vec3(0.180, 0.360, 0.050);",
+    "  vec3 bright = vec3(0.640, 0.900, 0.200); // a touch under the #c6ff3d accent",
+    "  vec3 col = mix(deep, mid, smoothstep(0.12, 0.65, f));",
+    "  col = mix(col, bright, smoothstep(0.78, 1.10, f));",
+    "",
+    "  // Fade toward the page background at the bottom of the hero.",
+    "  col *= mix(0.25, 1.0, smoothstep(0.0, 0.5, uv.y));",
+    "",
+    "  // Fine grain so the gradients don't band on 8-bit screens.",
+    "  col += (hash(gl_FragCoord.xy) - 0.5) * 0.02;",
+    "  gl_FragColor = vec4(col, 1.0);",
     "}",
   ].join("\n");
 
@@ -58,6 +90,8 @@
   var program;
   var uTime;
   var uResolution;
+  var uMouse;
+  var uHover;
 
   try {
     var vertexShader = compileShader(gl.VERTEX_SHADER, VERTEX_SRC);
@@ -85,6 +119,8 @@
     var positionLocation = gl.getAttribLocation(program, "a_position");
     uTime = gl.getUniformLocation(program, "u_time");
     uResolution = gl.getUniformLocation(program, "u_resolution");
+    uMouse = gl.getUniformLocation(program, "u_mouse");
+    uHover = gl.getUniformLocation(program, "u_hover");
 
     gl.useProgram(program);
     gl.enableVertexAttribArray(positionLocation);
@@ -94,10 +130,11 @@
     return;
   }
 
+  // The field is very smooth, so rendering at 1x even on retina screens
+  // looks the same and costs a quarter of the pixels.
   function resize() {
-    var dpr = Math.min(window.devicePixelRatio || 1, 2);
-    var width = canvas.clientWidth * dpr;
-    var height = canvas.clientHeight * dpr;
+    var width = Math.max(2, Math.round(canvas.clientWidth));
+    var height = Math.max(2, Math.round(canvas.clientHeight));
     if (canvas.width !== width || canvas.height !== height) {
       canvas.width = width;
       canvas.height = height;
@@ -105,10 +142,23 @@
     }
   }
 
+  // Pointer state: `target` is where the pointer is, `mouse` eases toward
+  // it every frame (that lag is what makes the light feel like it follows).
+  var mouse = [0.7, 0.5];
+  var target = [0.7, 0.5];
+  var hover = 0;
+  var hoverTarget = 0;
+
   function render(time) {
     resize();
+    mouse[0] += (target[0] - mouse[0]) * 0.08;
+    mouse[1] += (target[1] - mouse[1]) * 0.08;
+    hover += (hoverTarget - hover) * 0.06;
+
     gl.uniform1f(uTime, time * 0.001);
     gl.uniform2f(uResolution, canvas.width, canvas.height);
+    gl.uniform2f(uMouse, mouse[0], mouse[1]);
+    gl.uniform1f(uHover, hover);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
   }
 
@@ -125,6 +175,21 @@
       // to restart the loop next time the hero scrolls back into view.
       rafId = null;
     }
+  }
+
+  // Cursor glow: mouse/pen only (on touch there's nothing to follow), and
+  // not with reduced motion.
+  if (!reducedMotion) {
+    hero.addEventListener("pointermove", function (event) {
+      if (event.pointerType === "touch") return;
+      var box = canvas.getBoundingClientRect();
+      target[0] = (event.clientX - box.left) / box.width;
+      target[1] = 1 - (event.clientY - box.top) / box.height; // GL y is up
+      hoverTarget = 1;
+    });
+    hero.addEventListener("pointerleave", function () {
+      hoverTarget = 0;
+    });
   }
 
   // Pause the animation loop once the hero scrolls out of view.

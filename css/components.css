@@ -2,6 +2,11 @@
 
 /* --- Buttons --- */
 .btn {
+  --btn-shine: rgba(255, 255, 255, 0.35);
+
+  position: relative;
+  overflow: hidden;
+  isolation: isolate; /* keeps the shine (z-index -1) above the button's own background */
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
@@ -10,27 +15,70 @@
   font-weight: 600;
   text-decoration: none;
   border: 1px solid transparent;
+  /* No `transform` here: GSAP animates the hero buttons' transform on
+     entry, and a CSS transition on it would make that tween lag. */
+  transition:
+    background-color 0.3s var(--ease-default),
+    border-color 0.3s var(--ease-default),
+    box-shadow 0.3s var(--ease-default);
 }
 
+/* Shine — same as the About chips: a diagonal light band parked off the
+   left edge that slides to the middle on hover and back out on leave
+   (transition on the base state, so it animates both ways). It sits
+   behind the label, so the text never gets washed out. */
+.btn::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  background: linear-gradient(110deg, transparent 30%, var(--btn-shine) 50%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform 0.6s var(--ease-default);
+  pointer-events: none;
+}
+
+.btn:hover::before,
+.btn:focus-visible::before {
+  transform: translateX(0);
+}
+
+/* Primary: white shine on lime + a soft lime glow. */
 .btn-primary {
+  --btn-shine: rgba(255, 255, 255, 0.6);
   background: var(--color-accent);
   color: var(--color-accent-text);
-}
-
-.btn-ghost {
-  background: transparent;
-  border-color: var(--color-border);
-  color: var(--color-text);
 }
 
 .btn-primary:hover,
 .btn-primary:focus-visible {
   transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(198, 255, 61, 0.25);
+}
+
+/* Ghost: glassy fill, the border lights up, faint white shine. */
+.btn-ghost {
+  --btn-shine: rgba(255, 255, 255, 0.18);
+  background: transparent;
+  border-color: var(--color-border);
+  color: var(--color-text);
 }
 
 .btn-ghost:hover,
 .btn-ghost:focus-visible {
-  background: var(--color-bg-elevated);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.45);
+  box-shadow: 0 0 18px rgba(198, 255, 61, 0.15);
+}
+
+[data-theme="light"] .btn-ghost {
+  --btn-shine: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .btn-ghost:hover,
+[data-theme="light"] .btn-ghost:focus-visible {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.3);
 }
 
 /* --- About lead paragraph --- */
@@ -52,40 +100,92 @@
   mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
 }
 
+/* Without JS the chips simply wrap; main.js adds .chip-marquee--ready once
+   it has cloned enough sets to fill the width, which turns on the loop. */
 .chip-list {
   list-style: none;
   display: flex;
-  flex-wrap: nowrap;
-  width: max-content;
+  flex-wrap: wrap;
+  row-gap: var(--space-2);
   margin: 0;
-  padding: 0;
-  animation: chip-marquee 16s linear infinite;
+  padding: var(--space-1) 0; /* room for the hover glow */
 }
 
-/* Pause on hover so the labels are easy to read with a mouse. */
-.chip-marquee:hover .chip-list {
-  animation-play-state: paused;
+.chip-marquee--ready .chip-list {
+  flex-wrap: nowrap;
+  width: max-content;
+  /* Duration is set by main.js from the track width, so the speed stays
+     the same however many copies were needed. */
+  animation: chip-marquee var(--marquee-duration, 30s) linear infinite;
 }
 
 .chip-list li {
+  --chip-bg: rgba(255, 255, 255, 0.04);
+  --chip-bg-hover: rgba(255, 255, 255, 0.1);
+  --chip-border-hover: rgba(255, 255, 255, 0.45);
+  --chip-shine: rgba(255, 255, 255, 0.35);
+
+  position: relative;
+  overflow: hidden;
   flex: 0 0 auto;
   /* Spacing via margin, not `gap`: with the duplicate-track technique below,
      `gap` leaves an extra half-gap at the 50% loop point (it isn't "inside"
      either copy), which reads as a stutter/cut. A trailing margin on every
      item — including the last one of each copy — is part of that item's own
-     box, so the two copies line up exactly at the midpoint. */
+     box, so the copies line up exactly at the midpoint. */
   margin-right: var(--space-2);
   padding: var(--space-2) var(--space-3);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-pill);
+  background: var(--chip-bg);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   font-size: var(--fs-small);
   color: var(--color-text-muted);
   white-space: nowrap;
+  cursor: default;
+  transition:
+    color 0.3s var(--ease-default),
+    background-color 0.3s var(--ease-default),
+    border-color 0.3s var(--ease-default),
+    box-shadow 0.3s var(--ease-default);
 }
 
-/* The list is rendered twice in the HTML (second copy aria-hidden); looping
-   the track by exactly -50% lines the end of set 1 up with the start of set
-   2, so the restart to 0% is invisible. */
+[data-theme="light"] .chip-list li {
+  --chip-bg: rgba(0, 0, 0, 0.03);
+  --chip-bg-hover: rgba(255, 255, 255, 0.7);
+  --chip-border-hover: rgba(0, 0, 0, 0.3);
+  --chip-shine: rgba(255, 255, 255, 0.9);
+}
+
+/* Shine: a diagonal light band parked off the left edge. On hover it
+   slides in and stops at the middle of the pill; on leave it slides back
+   out the way it came (the transition lives on the base state, so it runs
+   in both directions). */
+.chip-list li::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  background: linear-gradient(110deg, transparent 30%, var(--chip-shine) 50%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform 0.6s var(--ease-default);
+  pointer-events: none;
+}
+
+.chip-list li:hover {
+  color: var(--color-text);
+  background: var(--chip-bg-hover);
+  border-color: var(--chip-border-hover);
+  box-shadow: 0 0 18px rgba(198, 255, 61, 0.18);
+}
+
+.chip-list li:hover::after {
+  transform: translateX(0);
+}
+
+/* main.js fills the track with 2N copies of the set; looping by exactly
+   -50% lines the end of copy N up with the start of copy N+1, so the
+   restart to 0% is invisible and there's never an empty gap. */
 @keyframes chip-marquee {
   from {
     transform: translateX(0);
@@ -303,25 +403,6 @@
   overflow: hidden;
 }
 
-.statement__header {
-  display: grid;
-  grid-template-columns: auto 1fr auto 1fr auto;
-  align-items: center;
-  justify-items: center;
-  gap: var(--space-3);
-  width: min(100% - var(--space-5), var(--container-max));
-  margin: 0 auto var(--space-6);
-  font-size: var(--fs-small);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--color-text);
-}
-
-.statement__mark {
-  width: 22px;
-  height: 22px;
-}
-
 .statement__text {
   max-width: 18ch;
   margin: 0 auto;
@@ -360,14 +441,6 @@
   justify-content: center;
   height: 100vh;
   padding: 0;
-}
-
-.statement--animated .statement__header {
-  position: absolute;
-  top: var(--space-6);
-  left: 0;
-  right: 0;
-  margin-bottom: 0;
 }
 
 .statement--animated .statement__curve {
@@ -576,37 +649,66 @@
   text-align: center;
 }
 
+/* No card: just the heading on the page background. */
 .works-cta__inner {
   padding: var(--space-6) var(--space-4);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-card);
-  background: var(--color-bg-elevated);
 }
 
 .works-cta h2 {
-  margin-bottom: var(--space-4);
+  max-width: 22ch;
+  margin: 0 auto var(--space-5);
 }
 
-/* --- Testimonials --- */
+/* --- Testimonials: card fan ---
+   Default (no JS, reduced motion, < 992px): a plain grid of cards.
+   animations.js adds .testimonial-fan--orbit on desktop to turn each
+   .testimonial-orbit into a 300vw square centered under its card, so
+   rotating the wrapper swings the card along a very wide arc. */
+.testimonial-fan {
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
 .testimonial-card {
-  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-height: 22rem;
+  padding: var(--space-5) var(--space-4);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-card);
   background: var(--color-bg-elevated);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18);
+}
+
+.testimonial-card__step {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+[data-theme="light"] .testimonial-card__step {
+  color: var(--color-text-muted); /* lime is too pale on white */
 }
 
 .testimonial-card blockquote {
   margin: 0;
   font-family: var(--font-heading);
-  font-size: var(--fs-h3);
-  line-height: 1.35;
+  font-weight: 500;
+  font-size: clamp(1.25rem, 0.8vw + 1rem, 1.625rem);
+  line-height: 1.3;
 }
 
 .testimonial-card footer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-top: auto;
   font-size: var(--fs-small);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
   color: var(--color-text-muted);
 }
 
@@ -614,21 +716,178 @@
   color: var(--color-text);
 }
 
-/* --- Partners --- */
-.partner-row {
+/* Desktop orbit mode */
+.testimonial-fan--orbit {
+  position: relative;
+  display: block;
+  height: 44rem;
+  /* Bleed to the viewport edges so cards can swing in from off-screen. */
+  margin-inline: calc(50% - 50vw);
+  overflow: hidden;
+}
+
+.testimonial-fan--orbit .testimonial-orbit {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 300vw;
+  height: 300vw;
+  margin-left: -150vw;
+  pointer-events: none;
+}
+
+.testimonial-fan--orbit .testimonial-card {
+  position: absolute;
+  top: 22rem; /* vertical center of the fan */
+  left: 50%;
+  width: 22.5rem;
+  height: 31rem;
+  margin: -15.5rem 0 0 -11.25rem;
+  pointer-events: auto;
+}
+
+/* --- Closing footer (partners + contact) ---
+   Always dark, in both themes, so it reads as the end of the page.
+   .closing__layer--spot is a clone of the layer, painted in the accent
+   color and masked to a circle at --spot-x / --spot-y (animations.js). */
+.closing {
+  --closing-bg: #0f0f0f;
+  --closing-text: #f1f1f1;
+  --closing-muted: #6b6b6b;
+  --closing-border: rgba(255, 255, 255, 0.12);
+
+  position: relative;
+  overflow: hidden;
+  background: var(--closing-bg);
+  color: var(--closing-text);
+}
+
+.closing__layer {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-6) var(--space-4) calc(var(--space-7) + var(--space-5));
+}
+
+.closing__title {
+  display: flex;
+  flex-direction: column;
+  /* Replaces the space the removed {Aliados} bracket header used to take. */
+  margin: clamp(var(--space-5), 8vw, 6rem) 0 var(--space-6) -0.06em;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: clamp(2.25rem, 6.2vw, 8rem);
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+  color: var(--closing-text);
+}
+
+.closing__partners {
+  list-style: none;
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-5);
-  align-items: center;
   justify-content: space-between;
+  gap: var(--space-3) var(--space-5);
+  margin: 0 0 var(--space-7);
+  padding: var(--space-4) 0 0;
+  border-top: 1px solid var(--closing-border);
 }
 
 .partner-logo {
   font-family: var(--font-heading);
   font-weight: 600;
   font-size: var(--fs-h3);
-  color: var(--color-text-muted);
   letter-spacing: 0.02em;
+  color: var(--closing-muted);
+}
+
+.closing__bottom {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-4);
+  font-size: var(--fs-small);
+}
+
+.closing__col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.closing__col--end {
+  align-items: flex-end;
+  text-align: right;
+  color: var(--closing-muted);
+}
+
+.closing__label {
+  color: var(--closing-muted);
+}
+
+.closing__links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+}
+
+.closing a {
+  color: var(--closing-text);
+  text-decoration: none;
+}
+
+.closing a:hover,
+.closing a:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+
+.closing__cta {
+  font-size: var(--fs-h3);
+}
+
+/* Spotlight copy: same layout on top, accent color, circle mask. */
+.closing__layer--spot {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  --spot-x: 50%;
+  --spot-y: 50%;
+  --spot-r: 0px;
+  -webkit-mask-image: radial-gradient(circle var(--spot-r) at var(--spot-x) var(--spot-y), #000 92%, transparent 100%);
+  mask-image: radial-gradient(circle var(--spot-r) at var(--spot-x) var(--spot-y), #000 92%, transparent 100%);
+}
+
+.closing__layer--spot,
+.closing__layer--spot .closing__title,
+.closing__layer--spot .partner-logo,
+.closing__layer--spot .closing__label,
+.closing__layer--spot .closing__col--end,
+.closing__layer--spot a {
+  color: var(--color-accent);
+}
+
+.closing__layer--spot .closing__partners {
+  border-top-color: var(--color-accent);
+}
+
+@media (max-width: 768px) {
+  .closing__layer {
+    padding-inline: var(--space-3);
+  }
+
+  .closing__bottom {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: var(--space-5);
+  }
+
+  .closing__col--end {
+    grid-column: 1 / -1;
+    align-items: flex-start;
+    text-align: left;
+  }
 }
 
 /* --- Preloader --- */

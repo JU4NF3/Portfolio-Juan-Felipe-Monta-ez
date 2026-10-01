@@ -82,7 +82,10 @@
     </a>
 
     <!-- Desktop: fixed pill nav, bottom-center. -->
-    <nav class="nav-pill" aria-label="Principal">
+    <nav class="nav-pill" aria-label="Principal" data-nav-pill>
+      <!-- Glass highlight that slides to the active section's link
+           (js/nav.js). Purely visual; aria-current marks the active link. -->
+      <span class="nav-pill__indicator" data-nav-indicator aria-hidden="true"></span>
       <a class="nav-pill__link" href="#about">Sobre mí</a>
       <a class="nav-pill__link" href="#services">Servicios</a>
       <a class="nav-pill__link" href="#works">Trabajo</a>
@@ -197,20 +200,15 @@
           experimentos en WebGL hasta modelado 3D — y junto las tres cosas para que un
           producto se sienta pensado, no solo armado.
         </p>
-        <div class="chip-marquee">
+        <!-- One set only: js/main.js clones it as many times as needed to
+             fill the width (clones are aria-hidden) and starts the loop. -->
+        <div class="chip-marquee" data-chip-marquee>
           <ul class="chip-list" aria-label="Áreas de enfoque">
             <li>Diseño UI/UX</li>
             <li>Motion Graphics</li>
             <li>Identidad de Marca</li>
             <li>WebGL</li>
             <li>Modelado 3D</li>
-            <!-- Duplicate set for a seamless loop — hidden from assistive tech
-                 so it isn't read twice. -->
-            <li aria-hidden="true">Diseño UI/UX</li>
-            <li aria-hidden="true">Motion Graphics</li>
-            <li aria-hidden="true">Identidad de Marca</li>
-            <li aria-hidden="true">WebGL</li>
-            <li aria-hidden="true">Modelado 3D</li>
           </ul>
         </div>
       </div>
@@ -244,16 +242,6 @@
     <section id="statement" class="statement" data-statement>
       <div class="statement__track">
         <div class="statement__stage">
-          <div class="statement__header" aria-hidden="true">
-            <span>{</span>
-            <span>Trabajo</span>
-            <svg class="statement__mark" viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" />
-              <path d="M8 12h8M12 8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-            </svg>
-            <span>Trabajo</span>
-            <span>}</span>
-          </div>
           <h2 class="statement__text">Proyectos que transforman identidad en experiencias.</h2>
           <svg class="statement__curve" viewBox="0 -170 1516 330" aria-hidden="true">
             <path id="statement-path" d="M -700 260 C -400 195 -200 145 0 100 C 500 -20 1016 -20 1516 100 C 1716 145 1916 195 2216 260" fill="none" />
@@ -281,8 +269,9 @@
     <!-- 5. CTA to works -->
     <section id="works-cta" class="works-cta">
       <div class="container">
-        <div class="works-cta__inner" data-reveal-cta>
-          <h2>¿Quieres ver cómo se juntan estas piezas?</h2>
+        <div class="works-cta__inner">
+          <!-- Words light up one by one with scroll (animations.js). -->
+          <h2 data-split-cta>¿Quieres ver cómo se juntan estas piezas?</h2>
           <!-- TODO: /work doesn't exist yet — this links to a future page.
                Once it's built, add [data-page-transition] here too. -->
           <a class="btn btn-primary" href="work.html">Ver todo el trabajo</a>
@@ -293,49 +282,56 @@
     <!-- 6. Testimonials -->
     <section id="testimonials" class="testimonials">
       <div class="container">
-        <div class="section-head">
-          <span class="section-eyebrow">Testimonios</span>
-          <h2>Lo que dicen de mí</h2>
-        </div>
-        <div class="card-grid" data-testimonials-grid data-reveal-group></div>
-      </div>
-    </section>
-
-    <!-- 7. Partners -->
-    <section id="partners" class="partners">
-      <div class="container">
-        <div class="section-head">
-          <span class="section-eyebrow">Aliados</span>
-          <h2>Equipos que han confiado en mi trabajo</h2>
-        </div>
-        <div class="partner-row" data-partners-row data-reveal-group></div>
+        <!-- No visible heading here on purpose — the eyebrow/title were
+             competing with the fan/orbit animation. Kept as sr-only so the
+             section still has an accessible name for screen readers. -->
+        <h2 class="sr-only">Testimonios</h2>
+        <!-- Not [data-reveal-group]: cards fan in on a big orbit + inertia
+             hover (see .testimonial-fan in components.css + animations.js). -->
+        <div class="testimonial-fan" data-testimonials-grid></div>
       </div>
     </section>
   </main>
 
-  <footer class="site-footer">
-    <div class="container">
-      <div class="site-footer__top">
-        <div>
-          <strong>Hablemos.</strong>
+  <!-- 7. Closing: partners + footer in one block. With a mouse, an accent
+       copy of everything shows through a circle that follows the cursor
+       (the copy is cloned from .closing__layer by animations.js). -->
+  <footer id="partners" class="closing" data-closing>
+    <div class="closing__layer" data-closing-layer>
+      <h2 class="closing__title">
+        <span>Equipos que han</span>
+        <span>confiado en mi trabajo</span>
+      </h2>
+
+      <ul class="closing__partners" data-partners-row aria-label="Aliados"></ul>
+
+      <div class="closing__bottom">
+        <div class="closing__col">
+          <span class="closing__label">Hablemos</span>
           <!-- TODO: replace with the real Cal.com booking link. -->
-          <p><a class="btn btn-ghost" href="#">Ponte en contacto</a></p>
+          <a class="closing__cta" href="#">Ponte en contacto</a>
         </div>
-        <!-- TODO: replace with real social profile links. -->
-        <ul class="site-footer__social">
-          <li><a href="#">LinkedIn</a></li>
-          <li><a href="#">Behance</a></li>
-          <li><a href="#">Instagram</a></li>
-        </ul>
-      </div>
-      <div class="site-footer__bottom">
-        <span>&copy; 2026 Juanfe. Todos los derechos reservados.</span>
-        <!-- TODO: /privacy and /terms don't exist yet. -->
-        <span>
-          <a href="privacy.html">Política de privacidad</a> &middot;
-          <a href="terms.html">Términos y condiciones</a>
-        </span>
-        <a href="#hero">Volver arriba</a>
+        <div class="closing__col">
+          <span class="closing__label">Sígueme</span>
+          <!-- TODO: replace with real social profile links. -->
+          <ul class="closing__links">
+            <li><a href="#">LinkedIn</a></li>
+            <li><a href="#">Behance</a></li>
+            <li><a href="#">Instagram</a></li>
+          </ul>
+        </div>
+        <div class="closing__col">
+          <span class="closing__label">Legal</span>
+          <!-- TODO: /privacy and /terms don't exist yet. -->
+          <ul class="closing__links">
+            <li><a href="privacy.html">Política de privacidad</a></li>
+            <li><a href="terms.html">Términos y condiciones</a></li>
+          </ul>
+        </div>
+        <div class="closing__col closing__col--end">
+          <a href="#hero">Volver arriba</a>
+          <span>&copy; 2026 Juanfe. Todos los derechos reservados.</span>
+        </div>
       </div>
     </div>
   </footer>
@@ -431,7 +427,11 @@
   <!-- GSAP via CDN — free for everyone since 3.13, including SplitText. -->
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" defer></script>
+  <!-- Eased scroll when clicking in-page links (js/nav.js). -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollToPlugin.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js" defer></script>
+  <!-- Momentum hover on the testimonial cards (optional: skipped if it fails to load). -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/InertiaPlugin.min.js" defer></script>
 
   <!-- Classic scripts (not type="module") so the site also runs opened
        directly from disk (file://), matching the rest of the repo. `defer`

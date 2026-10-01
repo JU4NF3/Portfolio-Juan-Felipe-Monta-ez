@@ -24,6 +24,11 @@
     animation-iteration-count: 1 !important;
   }
 
+  /* Nav indicator: jumps to the active link instead of sliding. */
+  .nav-pill__indicator {
+    transition: none !important;
+  }
+
   /* Services rows: title swaps instantly instead of rolling. */
   .service-row__roll {
     transition: none !important;
