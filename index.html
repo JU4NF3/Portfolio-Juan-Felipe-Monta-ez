@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+
+  <!-- Anti-flash: apply the saved theme before first paint, so there's no
+       flash of the wrong theme while tokens.css loads. -->
+  <script>
+    (function () {
+      try {
+        if (localStorage.getItem("portfolio-theme") === "light") {
+          document.documentElement.setAttribute("data-theme", "light");
+        }
+      } catch (e) {
+        /* localStorage unavailable — falls back to the default dark theme. */
+      }
+    })();
+  </script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Juan Felipe Montañez — Diseño UI/UX, Motion y Marca</title>
+  <meta
+    name="description"
+    content="Juan Felipe Montañez — diseño UI/UX, motion graphics, identidad de marca y experiencias WebGL para founders de startups y equipos de producto."
+  />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&family=Montserrat:wght@300;400;500;600;700&family=Poppins:wght@500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/hero.css" />
+  <link rel="stylesheet" href="css/a11y-motion.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Saltar al contenido</a>
+
+  <!-- Preloader: % counter driven by js/preloader.js. -->
+  <div class="preloader" data-preloader>
+    <span class="preloader__label">Cargando</span>
+    <span
+      class="preloader__count"
+      data-preloader-count
+      data-preloader-bar
+      role="progressbar"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      aria-valuenow="0"
+      aria-label="Progreso de carga de la página"
+      >0%</span
+    >
+  </div>
+
+  <!-- 6-panel transition overlay. Starts covering the screen (no [data-state]
+       yet) so content is never visible before preloader.js calls
+       PortfolioTransition.revealOnEntry(). See js/page-transition.js. -->
+  <div class="panel-transition" data-panel-transition aria-hidden="true">
+    <div class="panel-transition__panel"></div>
+    <div class="panel-transition__panel"></div>
+    <div class="panel-transition__panel"></div>
+    <div class="panel-transition__panel"></div>
+    <div class="panel-transition__panel"></div>
+    <div class="panel-transition__panel"></div>
+  </div>
+
+  <header class="site-header">
+    <!-- Self-link: re-triggers the full page-transition + preloader cycle via
+         a real reload. TODO: once /work, /about, etc. exist, point other
+         internal links here too and add [data-page-transition] to them. -->
+    <a class="logomark" href="index.html" data-page-transition>
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" />
+        <path d="M8 12h8M12 8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+      </svg>
+      Juanfe
+    </a>
+
+    <!-- Desktop: fixed pill nav, bottom-center. -->
+    <nav class="nav-pill" aria-label="Principal">
+      <a class="nav-pill__link" href="#about">Sobre mí</a>
+      <a class="nav-pill__link" href="#services">Servicios</a>
+      <a class="nav-pill__link" href="#works">Trabajo</a>
+      <a class="nav-pill__link" href="#testimonials">Testimonios</a>
+      <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2" />
+          <path
+            d="M12 2v2M12 20v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M2 12h2M20 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+        </svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path
+            d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linejoin="round"
+          />
+        </svg>
+        <span class="sr-only">Cambiar entre tema claro y oscuro</span>
+      </button>
+      <!-- TODO: replace with the real Cal.com booking link. -->
+      <a class="nav-pill__cta" href="#">Agendar una llamada</a>
+    </nav>
+
+    <!-- Mobile: single "Open menu" button, replaces the pill nav. -->
+    <button
+      class="nav-toggle"
+      type="button"
+      data-nav-toggle
+      aria-controls="mobile-menu"
+      aria-expanded="false"
+    >
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+      </svg>
+      Abrir menú
+    </button>
+
+    <div class="mobile-menu" id="mobile-menu" data-mobile-menu data-open="false">
+      <button class="mobile-menu__close" type="button" data-nav-close aria-label="Cerrar menú">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        </svg>
+      </button>
+      <nav aria-label="Móvil">
+        <ul class="mobile-menu__links">
+          <li><a href="#about">Sobre mí</a></li>
+          <li><a href="#services">Servicios</a></li>
+          <li><a href="#works">Trabajo</a></li>
+          <li><a href="#testimonials">Testimonios</a></li>
+        </ul>
+      </nav>
+      <div class="mobile-menu__footer">
+        <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2" />
+            <path
+              d="M12 2v2M12 20v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M2 12h2M20 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+          </svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path
+              d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <span class="sr-only">Cambiar entre tema claro y oscuro</span>
+        </button>
+        <!-- TODO: replace with the real Cal.com booking link. -->
+        <a class="btn btn-primary" href="#">Agendar una llamada</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- 1. Hero -->
+    <section id="hero" class="hero">
+      <canvas class="hero__canvas" data-hero-canvas aria-hidden="true"></canvas>
+      <div class="container hero__content">
+        <span class="hero__eyebrow">UI/UX · Motion · Marca · WebGL · 3D</span>
+        <h1 data-split-hero>Juan Felipe Montañez</h1>
+        <p class="hero__subtitle" data-hero-fade>
+          Estudiante de Creación Digital en la Universidad del Bosque. Mis mayores intereses
+          están en el UI/UX, el Motion Graphics, la creación de identidad de marca, WebGL y
+          todo lo relacionado con el modelado 3D.
+        </p>
+        <div class="hero__actions">
+          <!-- TODO: replace with the real Cal.com booking link. -->
+          <a class="btn btn-primary" href="#" data-hero-fade>Agendar una llamada</a>
+          <a class="btn btn-ghost" href="#works" data-hero-fade>Ver mi trabajo</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. About -->
+    <section id="about" class="about">
+      <div class="container">
+        <span class="section-eyebrow">Sobre mí</span>
+        <p data-split-about>
+          Soy estudiante de Creación Digital en la Universidad del Bosque, en el punto donde
+          se cruzan el diseño de interfaces, el motion y la identidad de marca. Me importa
+          cómo se ve un producto, cómo se mueve y cómo está construido — desde UI/UX y
+          experimentos en WebGL hasta modelado 3D — y junto las tres cosas para que un
+          producto se sienta pensado, no solo armado.
+        </p>
+        <div class="chip-marquee">
+          <ul class="chip-list" aria-label="Áreas de enfoque">
+            <li>Diseño UI/UX</li>
+            <li>Motion Graphics</li>
+            <li>Identidad de Marca</li>
+            <li>WebGL</li>
+            <li>Modelado 3D</li>
+            <!-- Duplicate set for a seamless loop — hidden from assistive tech
+                 so it isn't read twice. -->
+            <li aria-hidden="true">Diseño UI/UX</li>
+            <li aria-hidden="true">Motion Graphics</li>
+            <li aria-hidden="true">Identidad de Marca</li>
+            <li aria-hidden="true">WebGL</li>
+            <li aria-hidden="true">Modelado 3D</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Services -->
+    <section id="services" class="services">
+      <div class="container">
+        <div class="services-head">
+          <h2 class="services-head__title"><em>Servicios</em>+ para productos digitales</h2>
+          <p class="services-head__desc">
+            Diseño, movimiento y código bajo un mismo criterio: llevo tu producto de la primera
+            idea a algo que la gente quiera usar.
+          </p>
+          <!-- TODO: point to /servicios once that page exists. -->
+          <a class="services-head__btn" href="#">Ver servicios</a>
+        </div>
+        <!-- Big rows with icon + rolling title; icons rotate on scroll
+             (see .service-row in components.css + animations.js). -->
+        <div class="services-list" data-services-grid></div>
+        <div class="who-i-build-for">
+          <h3>Para quién trabajo</h3>
+          <p>Founders de startups y equipos de producto que necesitan un diseño que aguante a escala.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Works -->
+    <section id="works" class="works">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-eyebrow">Trabajo Seleccionado</span>
+          <h2>Algunos proyectos recientes</h2>
+        </div>
+        <!-- Not [data-reveal-group]: works has its own clip-path reveal
+             (see .work-media in components.css + animations.js). -->
+        <div class="works-list" data-works-grid></div>
+      </div>
+    </section>
+
+    <!-- 5. CTA to works -->
+    <section id="works-cta" class="works-cta">
+      <div class="container">
+        <div class="works-cta__inner" data-reveal-cta>
+          <h2>¿Quieres ver cómo se juntan estas piezas?</h2>
+          <!-- TODO: /work doesn't exist yet — this links to a future page.
+               Once it's built, add [data-page-transition] here too. -->
+          <a class="btn btn-primary" href="work.html">Ver todo el trabajo</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Testimonials -->
+    <section id="testimonials" class="testimonials">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-eyebrow">Testimonios</span>
+          <h2>Lo que dicen de mí</h2>
+        </div>
+        <div class="card-grid" data-testimonials-grid data-reveal-group></div>
+      </div>
+    </section>
+
+    <!-- 7. Partners -->
+    <section id="partners" class="partners">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-eyebrow">Aliados</span>
+          <h2>Equipos que han confiado en mi trabajo</h2>
+        </div>
+        <div class="partner-row" data-partners-row data-reveal-group></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="site-footer__top">
+        <div>
+          <strong>Hablemos.</strong>
+          <!-- TODO: replace with the real Cal.com booking link. -->
+          <p><a class="btn btn-ghost" href="#">Ponte en contacto</a></p>
+        </div>
+        <!-- TODO: replace with real social profile links. -->
+        <ul class="site-footer__social">
+          <li><a href="#">LinkedIn</a></li>
+          <li><a href="#">Behance</a></li>
+          <li><a href="#">Instagram</a></li>
+        </ul>
+      </div>
+      <div class="site-footer__bottom">
+        <span>&copy; 2026 Juanfe. Todos los derechos reservados.</span>
+        <!-- TODO: /privacy and /terms don't exist yet. -->
+        <span>
+          <a href="privacy.html">Política de privacidad</a> &middot;
+          <a href="terms.html">Términos y condiciones</a>
+        </span>
+        <a href="#hero">Volver arriba</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Portfolio content (services, projects, testimonials, partners): real
+       JSON, parsed with JSON.parse() in js/main.js. It lives inline here
+       instead of being a separate info.json fetched over the network, so
+       the site still opens by double-clicking index.html — browsers block
+       fetch()/XHR of local files under file:// (CORS), which a standalone
+       .json file would need a local server to get around. Edit the JSON
+       below directly; see js/main.js for what each field means. -->
+  <script id="info-data" type="application/json">
+  {
+    "services": [
+      {
+        "label": "Diseño UI/UX",
+        "icon": "burst",
+        "title": "Diseño UI/UX",
+        "description": "Diseño de producto de punta a punta: research, wireframes e interfaces de alta fidelidad enfocadas en usabilidad."
+      },
+      {
+        "label": "Motion Graphics",
+        "icon": "sparkle",
+        "title": "Motion Graphics",
+        "description": "Identidades animadas, loops explicativos y micro-interacciones que le dan movimiento a una marca."
+      },
+      {
+        "label": "Identidad de marca",
+        "icon": "asterisk",
+        "title": "Identidad de Marca",
+        "description": "Sistemas visuales — logo, tipografía, color y tono — construidos para sostenerse en producto y marketing."
+      },
+      {
+        "label": "WebGL",
+        "icon": "diamonds",
+        "title": "Experiencias en WebGL",
+        "description": "Shaders propios y trabajo interactivo en canvas para secciones hero y vitrinas de producto."
+      },
+      {
+        "label": "Modelado 3D",
+        "icon": "cube",
+        "title": "Modelado y Visualización 3D",
+        "description": "Modelado de producto y de escena para renders, previews en tiempo real y piezas de motion."
+      }
+    ],
+    "projects": [
+      {
+        "title": "Northwind Banking App",
+        "category": "UI/UX · Fintech",
+        "summary": "Rediseño de un flujo de banca móvil para reducir el abandono en el onboarding.",
+        "initials": "NB"
+      },
+      {
+        "title": "Loop Studio Rebrand",
+        "category": "Identidad de Marca",
+        "summary": "Refresco completo de identidad para un estudio de diseño de motion.",
+        "initials": "LS"
+      },
+      {
+        "title": "Halo Product Launch",
+        "category": "WebGL · Motion",
+        "summary": "Landing page interactiva en WebGL para el lanzamiento de un producto de hardware.",
+        "initials": "HP"
+      },
+      {
+        "title": "Atlas Dashboard",
+        "category": "UI/UX · SaaS",
+        "summary": "Rediseño de un dashboard denso en datos para una plataforma de logística.",
+        "initials": "AD"
+      }
+    ],
+    "testimonials": [
+      {
+        "quote": "Juanfe convirtió un brief vago en una interfaz que a nuestros usuarios realmente les gusta usar.",
+        "name": "Alex Rivera",
+        "role": "Founder, Northwind"
+      },
+      {
+        "quote": "El sistema de marca que construyó es lo primero que los nuevos empleados elogian.",
+        "name": "Priya Shah",
+        "role": "Head of Product, Loop Studio"
+      },
+      {
+        "quote": "Rápido, comunicativo, y el trabajo de motion subió la conversión de nuestro lanzamiento.",
+        "name": "Marco Dinelli",
+        "role": "CEO, Halo"
+      }
+    ],
+    "partners": ["Northwind", "Loop Studio", "Halo", "Atlas", "Ventures Lab"]
+  }
+  </script>
+
+  <!-- GSAP via CDN — free for everyone since 3.13, including SplitText. -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js" defer></script>
+
+  <!-- Classic scripts (not type="module") so the site also runs opened
+       directly from disk (file://), matching the rest of the repo. `defer`
+       keeps this exact execution order after parsing. -->
+  <script src="js/main.js" defer></script>
+  <script src="js/theme.js" defer></script>
+  <script src="js/nav.js" defer></script>
+  <script src="js/hero-shader.js" defer></script>
+  <script src="js/page-transition.js" defer></script>
+  <script src="js/animations.js" defer></script>
+  <script src="js/preloader.js" defer></script>
+</body>
+</html>

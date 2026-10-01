@@ -1,0 +1,602 @@
+/* Buttons, cards, chips, testimonials, partners, preloader and panel transition. */
+
+/* --- Buttons --- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-pill);
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid transparent;
+}
+
+.btn-primary {
+  background: var(--color-accent);
+  color: var(--color-accent-text);
+}
+
+.btn-ghost {
+  background: transparent;
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+.btn-primary:hover,
+.btn-primary:focus-visible {
+  transform: translateY(-1px);
+}
+
+.btn-ghost:hover,
+.btn-ghost:focus-visible {
+  background: var(--color-bg-elevated);
+}
+
+/* --- About lead paragraph --- */
+.about p[data-split-about] {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: clamp(1.5rem, 1rem + 2.2vw, 2.75rem);
+  line-height: 1.35;
+  color: var(--color-text);
+  max-width: 900px;
+}
+
+/* --- Chips (About section) — infinite marquee of focus areas --- */
+.chip-marquee {
+  overflow: hidden;
+  margin-top: var(--space-5);
+  /* Fade the edges so chips don't look like they're cut off mid-pill. */
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.chip-list {
+  list-style: none;
+  display: flex;
+  flex-wrap: nowrap;
+  width: max-content;
+  margin: 0;
+  padding: 0;
+  animation: chip-marquee 16s linear infinite;
+}
+
+/* Pause on hover so the labels are easy to read with a mouse. */
+.chip-marquee:hover .chip-list {
+  animation-play-state: paused;
+}
+
+.chip-list li {
+  flex: 0 0 auto;
+  /* Spacing via margin, not `gap`: with the duplicate-track technique below,
+     `gap` leaves an extra half-gap at the 50% loop point (it isn't "inside"
+     either copy), which reads as a stutter/cut. A trailing margin on every
+     item — including the last one of each copy — is part of that item's own
+     box, so the two copies line up exactly at the midpoint. */
+  margin-right: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-small);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+/* The list is rendered twice in the HTML (second copy aria-hidden); looping
+   the track by exactly -50% lines the end of set 1 up with the start of set
+   2, so the restart to 0% is invisible. */
+@keyframes chip-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* --- Grid shells --- */
+.card-grid {
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+/* --- Services header --- */
+.services-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "title title"
+    "desc  btn";
+  align-items: center;
+  column-gap: var(--space-5);
+  row-gap: var(--space-5);
+  max-width: 900px;
+  margin: 0 auto var(--space-7);
+}
+
+.services-head__title {
+  grid-area: title;
+  max-width: 19ch;
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: clamp(2rem, 2.5vw + 1rem, 3.125rem);
+  line-height: 1.15;
+  color: var(--color-text);
+}
+
+.services-head__title em {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.services-head__desc {
+  grid-area: desc;
+  max-width: 34rem;
+  margin: 0 0 0 clamp(0px, 8vw, 7.5rem);
+  color: var(--color-text-muted);
+}
+
+.services-head__btn {
+  grid-area: btn;
+  padding: var(--space-3) var(--space-5);
+  border: 1.5px solid var(--color-text);
+  border-radius: var(--radius-pill);
+  font-size: 1.25rem;
+  font-weight: 300;
+  color: var(--color-text);
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background-color 0.3s var(--ease-default),
+    color 0.3s var(--ease-default),
+    transform 0.16s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.services-head__btn:hover,
+.services-head__btn:focus-visible {
+  background: var(--color-text);
+  color: var(--color-bg);
+}
+
+.services-head__btn:active {
+  transform: scale(0.97);
+}
+
+/* --- Services list: big rows, rolling title, scroll-rotated icon --- */
+.services-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.service-row {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(0.5rem, 1.2vw, 1.25rem);
+  text-decoration: none;
+  color: var(--color-text-muted);
+  transition: color 0.35s var(--ease-default);
+}
+
+.service-row:hover,
+.service-row:focus-visible {
+  color: var(--color-text);
+}
+
+.service-row__icon {
+  flex: 0 0 auto;
+  width: clamp(2rem, 5vw, 4.375rem);
+  height: clamp(2rem, 5vw, 4.375rem);
+}
+
+/* One line tall window; the duplicate waits just below it. */
+.service-row__title {
+  display: block;
+  overflow: hidden;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: clamp(2rem, 6vw, 6.25rem);
+  line-height: 1.1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.service-row__roll {
+  position: relative;
+  display: block;
+  will-change: transform;
+  transition: transform 0.4s cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+.service-row__roll-dup {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  color: var(--color-text);
+}
+
+/* Roll only with a real pointer — on touch, hover sticks after a tap. */
+@media (hover: hover) and (pointer: fine) {
+  .service-row:hover .service-row__roll {
+    transform: translateY(-100%);
+  }
+}
+
+.service-row:focus-visible .service-row__roll {
+  transform: translateY(-100%);
+}
+
+/* --- Who I build for --- */
+.who-i-build-for {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: var(--space-4);
+  margin-top: var(--space-7);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+
+.who-i-build-for h3 {
+  margin: 0;
+  font-size: var(--fs-body);
+  font-weight: 500;
+}
+
+.who-i-build-for p {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+@media (max-width: 768px) {
+  .services-head {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "title"
+      "desc"
+      "btn";
+    row-gap: var(--space-4);
+    margin-bottom: var(--space-6);
+  }
+
+  .services-head__desc {
+    margin-left: 0;
+  }
+
+  .services-head__btn {
+    text-align: center;
+  }
+
+  .services-list {
+    gap: var(--space-4);
+  }
+
+  .service-row {
+    color: var(--color-text);
+  }
+
+  .service-row__title {
+    white-space: normal;
+    text-align: center;
+  }
+
+  .who-i-build-for {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- Works rows (one per project) --- */
+.works-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-7);
+}
+
+.work-row__head {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "tag   ."
+    "title link";
+  align-items: end;
+  row-gap: var(--space-3);
+  column-gap: var(--space-4);
+}
+
+.work-row__tag {
+  grid-area: tag;
+  justify-self: start;
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-small);
+  color: var(--color-text);
+  white-space: nowrap;
+}
+
+.work-row__title {
+  grid-area: title;
+  margin: 0;
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: clamp(2rem, 2.5vw + 1rem, 3.125rem);
+  line-height: 1.1;
+  color: var(--color-text);
+}
+
+.work-row__link {
+  grid-area: link;
+  padding-bottom: var(--space-1);
+  font-size: var(--fs-small);
+  color: var(--color-text);
+  text-underline-offset: 0.25em;
+  white-space: nowrap;
+}
+
+.work-row__link:hover,
+.work-row__link:focus-visible {
+  color: var(--color-accent);
+}
+
+.work-row__summary {
+  margin: var(--space-2) 0 var(--space-5);
+  max-width: 560px;
+  color: var(--color-text-muted);
+}
+
+.work-row__media {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--space-4);
+}
+
+/* --- Work media: clip-path reveal + hover zoom ---
+   Visible by default, so the page still works without JS / GSAP.
+   animations.js adds .works-list--reveal to the list (motion allowed only)
+   to arm the hidden state, then .is-in-view to each media on scroll. */
+.work-media {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 10;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  transition: border-radius 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.work-media--side {
+  aspect-ratio: auto; /* stretches to the main image's height */
+}
+
+.work-media__inner {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  clip-path: inset(0 round 0.5rem);
+  will-change: clip-path, transform;
+  transition:
+    clip-path 1.1s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+/* Fills the frame; swap for <img> with object-fit: cover later. */
+.work-media__inner > * {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+  object-fit: cover;
+  transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Armed: hidden from the top-left corner, image slightly zoomed in. */
+.works-list--reveal .work-media__inner {
+  clip-path: inset(0 100% 100% 0 round 0.5rem);
+}
+
+.works-list--reveal .work-media__inner > * {
+  transform: scale(1.14);
+}
+
+/* In view: wipe open to the bottom-right while the image settles. */
+.works-list--reveal .work-media.is-in-view .work-media__inner {
+  clip-path: inset(0 round 0.5rem);
+}
+
+.works-list--reveal .work-media.is-in-view .work-media__inner > * {
+  transform: scale(1);
+}
+
+/* Side image starts a beat after the main one. */
+.works-list--reveal .work-media--side .work-media__inner,
+.works-list--reveal .work-media--side .work-media__inner > * {
+  transition-delay: 0.15s;
+}
+
+/* Hover: corners square off and the image zooms in. */
+.work-media:hover,
+.work-media:focus-visible {
+  border-radius: 0;
+}
+
+.work-media:hover .work-media__inner,
+.work-media:focus-visible .work-media__inner {
+  transform: scale(1.12);
+  transition-delay: 0s;
+}
+
+@media (max-width: 768px) {
+  .works-list {
+    gap: var(--space-6);
+  }
+
+  .work-row__head {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "tag   link"
+      "title title";
+  }
+
+  .work-row__media {
+    grid-template-columns: 1fr;
+  }
+
+  .work-media--main {
+    aspect-ratio: 1 / 1;
+  }
+
+  .work-media--side {
+    height: 120px;
+  }
+}
+
+.media-placeholder {
+  aspect-ratio: 4 / 3;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--color-accent-text);
+  background: linear-gradient(135deg, var(--color-accent), #6fe0c9);
+}
+
+.media-placeholder--alt {
+  font-size: 1.25rem;
+  color: var(--color-text);
+  background: linear-gradient(160deg, var(--color-bg-elevated-2), var(--color-bg-elevated));
+  border: 1px solid var(--color-border);
+}
+
+/* --- CTA to works --- */
+.works-cta {
+  text-align: center;
+}
+
+.works-cta__inner {
+  padding: var(--space-6) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-bg-elevated);
+}
+
+.works-cta h2 {
+  margin-bottom: var(--space-4);
+}
+
+/* --- Testimonials --- */
+.testimonial-card {
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-bg-elevated);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.testimonial-card blockquote {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: var(--fs-h3);
+  line-height: 1.35;
+}
+
+.testimonial-card footer {
+  font-size: var(--fs-small);
+  color: var(--color-text-muted);
+}
+
+.testimonial-card footer strong {
+  color: var(--color-text);
+}
+
+/* --- Partners --- */
+.partner-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-5);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.partner-logo {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: var(--fs-h3);
+  color: var(--color-text-muted);
+  letter-spacing: 0.02em;
+}
+
+/* --- Preloader --- */
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-preloader);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  background: var(--color-bg);
+  transition: opacity 0.4s var(--ease-default);
+}
+
+.preloader[data-hidden="true"] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.preloader__count {
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.preloader__label {
+  font-size: var(--fs-small);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+/* --- 6-panel page transition --- */
+.panel-transition {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-panels);
+  display: flex;
+  pointer-events: none;
+}
+
+.panel-transition__panel {
+  flex: 1 0 calc(100% / 6);
+  background: var(--color-bg);
+  transform: scaleY(1);
+  transform-origin: top;
+}
+
+/* Panels start covering the screen so there is never a flash of
+   unrevealed content before preloader.js runs revealOnEntry(). */
+.panel-transition[data-state="revealed"] .panel-transition__panel {
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform var(--duration-panel) var(--ease-default);
+}
+
+.panel-transition[data-state="covering"] .panel-transition__panel {
+  transform: scaleY(1);
+  transform-origin: top;
+  transition: transform var(--duration-panel) var(--ease-default);
+}
+
+/* Slight stagger between panels so they don't move as one flat block. */
+.panel-transition__panel:nth-child(1) { transition-delay: 0ms; }
+.panel-transition__panel:nth-child(2) { transition-delay: 40ms; }
+.panel-transition__panel:nth-child(3) { transition-delay: 80ms; }
+.panel-transition__panel:nth-child(4) { transition-delay: 120ms; }
+.panel-transition__panel:nth-child(5) { transition-delay: 160ms; }
+.panel-transition__panel:nth-child(6) { transition-delay: 200ms; }

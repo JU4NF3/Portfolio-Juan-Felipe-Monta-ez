@@ -1,0 +1,60 @@
+/* Design tokens — single source of truth for color, type and spacing.
+   Dark is the default theme (per Resumen.md); [data-theme="light"] overrides it. */
+
+:root {
+  /* Color — dark (default) */
+  --color-bg: #121212;
+  --color-bg-elevated: #1a1a1a;
+  --color-bg-elevated-2: #202020;
+  --color-text: #f5f5f5;
+  --color-text-muted: #a3a3a3;
+  --color-border: rgba(255, 255, 255, 0.12);
+  --color-accent: #c6ff3d;
+  --color-accent-text: #121212;
+
+  /* Type */
+  --font-heading: "Poppins", "Montserrat", sans-serif;
+  --font-body: "Montserrat", "Poppins", sans-serif;
+  --font-display: "Instrument Serif", Georgia, serif; /* italic accents only */
+
+  --fs-hero: clamp(2.5rem, 6vw + 1rem, 5.5rem);
+  --fs-h2: clamp(1.75rem, 3vw + 1rem, 2.75rem);
+  --fs-h3: clamp(1.125rem, 1vw + 1rem, 1.5rem);
+  --fs-body: 1rem;
+  --fs-small: 0.875rem;
+
+  /* Spacing scale */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 1rem;
+  --space-4: 1.5rem;
+  --space-5: 2.5rem;
+  --space-6: 4rem;
+  --space-7: 6rem;
+
+  /* Shape / layout */
+  --radius-pill: 999px;
+  --radius-card: 1.25rem;
+  --container-max: 1180px;
+  --nav-height: 64px;
+
+  /* Motion */
+  --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-panel: 900ms;
+
+  /* Layering */
+  --z-nav: 50;
+  --z-mobile-menu: 80;
+  --z-panels: 90;
+  --z-preloader: 100;
+}
+
+[data-theme="light"] {
+  --color-bg: #f7f7f5;
+  --color-bg-elevated: #ffffff;
+  --color-bg-elevated-2: #eeeeec;
+  --color-text: #141414;
+  --color-text-muted: #5c5c5c;
+  --color-border: rgba(0, 0, 0, 0.1);
+  --color-accent-text: #121212;
+}

@@ -1,0 +1,47 @@
+/* Single source of truth for the prefers-reduced-motion CSS override.
+   JS checks the same media query independently in hero-shader.js,
+   preloader.js and animations.js (gsap.matchMedia) — this file only
+   covers what plain CSS controls (panel transitions, mobile menu slide,
+   hover micro-movement, smooth scroll). */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .panel-transition__panel,
+  .mobile-menu,
+  .preloader,
+  .skip-link,
+  .btn-primary {
+    transition-duration: 0.01ms !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+
+  /* Services rows: title swaps instantly instead of rolling. */
+  .service-row__roll {
+    transition: none !important;
+  }
+
+  /* Works media: always fully revealed, no zoom on hover. */
+  .work-media,
+  .work-media__inner,
+  .work-media__inner > * {
+    transition: none !important;
+  }
+
+  .work-media__inner {
+    clip-path: inset(0 round 0.5rem) !important;
+  }
+
+  .work-media__inner,
+  .work-media__inner > * {
+    transform: none !important;
+  }
+}
