@@ -11,6 +11,19 @@ window.PortfolioAnimations = (function () {
 
   if (hasGsap) {
     gsap.registerPlugin(ScrollTrigger, SplitText);
+
+    // base.css sets `scroll-behavior: smooth` on <html>. ScrollTrigger.refresh()
+    // jumps the scroll position to measure every trigger; with smooth scroll
+    // those jumps get animated and the measurements come out wrong (the
+    // statement pin started at a negative offset after a resize). Turn it
+    // off just for the duration of each refresh.
+    var rootStyle = document.documentElement.style;
+    ScrollTrigger.addEventListener("refreshInit", function () {
+      rootStyle.scrollBehavior = "auto";
+    });
+    ScrollTrigger.addEventListener("refresh", function () {
+      rootStyle.scrollBehavior = "";
+    });
   }
 
   function buildHeroIntro() {
@@ -100,6 +113,61 @@ window.PortfolioAnimations = (function () {
       });
     }
 
+    // Statement: pin the stage for the track's 300vh and slide the sentence
+    // along the curve from off-screen right to off-screen left.
+    var statement = document.querySelector("[data-statement]");
+    var statementText = statement && statement.querySelector("[data-statement-text]");
+    if (statementText) {
+      var curve = statement.querySelector("#statement-path");
+      var viewBoxWidth = 1516; // keep in sync with the SVG viewBox
+
+      // Distance along the path where it crosses a given x (paths are
+      // left-to-right, so x grows with length; sampling is plenty precise).
+      var lengthAtX = function (x) {
+        var total = curve.getTotalLength();
+        for (var len = 0; len <= total; len += 4) {
+          if (curve.getPointAtLength(len).x >= x) return len;
+        }
+        return total;
+      };
+
+      statement.classList.add("statement--animated");
+
+      // Function-based values + invalidateOnRefresh: re-measured on resize,
+      // since the text length changes with the mobile font size.
+      gsap.fromTo(
+        statementText,
+        { attr: { startOffset: function () { return lengthAtX(viewBoxWidth) + 40; } } },
+        {
+          attr: {
+            startOffset: function () {
+              return lengthAtX(0) - statementText.getComputedTextLength() - 40;
+            },
+          },
+          ease: "none",
+          scrollTrigger: {
+            trigger: statement.querySelector(".statement__track"),
+            start: "top top",
+            end: "bottom bottom",
+            pin: statement.querySelector(".statement__stage"),
+            pinSpacing: false, // the 300vh track already provides the scroll room
+            scrub: true,
+            invalidateOnRefresh: true,
+            // Created after the [data-reveal-group] triggers further down the
+            // page; refresh this pin first so their positions account for it.
+            refreshPriority: 1,
+          },
+        }
+      );
+
+      // The text is measured in the web font; re-measure once it has loaded.
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(function () {
+          ScrollTrigger.refresh();
+        });
+      }
+    }
+
     // Works: clip-path wipe + image settle, driven by CSS transitions.
     // Adding .works-list--reveal arms the hidden state (so without JS the
     // media stay visible); each media then gets .is-in-view once on entry.
@@ -166,6 +234,8 @@ window.PortfolioAnimations = (function () {
           window.removeEventListener("portfolio:content-ready", buildScrollReveals);
           var worksList = document.querySelector("[data-works-grid]");
           if (worksList) worksList.classList.remove("works-list--reveal");
+          var statement = document.querySelector("[data-statement]");
+          if (statement) statement.classList.remove("statement--animated");
         };
       }
     );

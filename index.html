@@ -238,6 +238,33 @@
       </div>
     </section>
 
+    <!-- 3b. Statement: sentence that travels along a curve while the section
+         is pinned (see .statement in components.css + animations.js).
+         Without JS / with reduced motion only the plain <h2> shows. -->
+    <section id="statement" class="statement" data-statement>
+      <div class="statement__track">
+        <div class="statement__stage">
+          <div class="statement__header" aria-hidden="true">
+            <span>{</span>
+            <span>Trabajo</span>
+            <svg class="statement__mark" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" />
+              <path d="M8 12h8M12 8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+            <span>Trabajo</span>
+            <span>}</span>
+          </div>
+          <h2 class="statement__text">Proyectos que transforman identidad en experiencias.</h2>
+          <svg class="statement__curve" viewBox="0 -170 1516 330" aria-hidden="true">
+            <path id="statement-path" d="M -700 260 C -400 195 -200 145 0 100 C 500 -20 1016 -20 1516 100 C 1716 145 1916 195 2216 260" fill="none" />
+            <text>
+              <textPath href="#statement-path" data-statement-text>Proyectos que transforman identidad en experiencias.</textPath>
+            </text>
+          </svg>
+        </div>
+      </div>
+    </section>
+
     <!-- 4. Works -->
     <section id="works" class="works">
       <div class="container">

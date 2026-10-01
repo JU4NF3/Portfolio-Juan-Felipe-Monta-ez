@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+
+  <!-- Anti-flash: apply the saved theme before first paint (same as index.html). -->
+  <script>
+    (function () {
+      try {
+        if (localStorage.getItem("portfolio-theme") === "light") {
+          document.documentElement.setAttribute("data-theme", "light");
+        }
+      } catch (e) {
+        /* localStorage unavailable — falls back to the default dark theme. */
+      }
+    })();
+  </script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestión de contenido — Juan Felipe Montañez</title>
+  <meta name="robots" content="noindex" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <!-- layout.css: only used here for .theme-toggle (the header's light/dark
+       button) — its nav/footer rules don't match anything on this page. -->
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/gestion.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Saltar al contenido</a>
+
+  <header class="gestion-header">
+    <a class="gestion-back" href="index.html">← Volver al portafolio</a>
+    <h1>Gestión de contenido</h1>
+    <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2" />
+        <path
+          d="M12 2v2M12 20v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M2 12h2M20 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        />
+      </svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path
+          d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linejoin="round"
+        />
+      </svg>
+      <span class="sr-only">Cambiar entre tema claro y oscuro</span>
+    </button>
+  </header>
+
+  <main id="main" class="gestion-main">
+    <p class="gestion-intro">
+      Acá editas servicios, proyectos, testimonios y partners. Esta página <strong>no
+      modifica <code>index.html</code> sola</strong> — no hay servidor, así que no puede
+      escribir archivos. Lo que sí hace: guarda tus cambios en este navegador (no se
+      pierden al recargar) y arma, al final, el JSON listo para copiar. Cuando termines,
+      copia ese bloque y pégalo reemplazando el contenido del
+      <code>&lt;script id="info-data"&gt;</code> en <code>index.html</code>.
+    </p>
+
+    <!-- 1. Services -->
+    <section class="gestion-section" data-section="services">
+      <h2>Servicios</h2>
+      <ul class="gestion-list" data-list="services"></ul>
+
+      <form class="gestion-form" data-form="services">
+        <input type="hidden" data-edit-index value="" />
+        <div class="gestion-field">
+          <label for="service-label">Nombre corto (como se ve en la lista)</label>
+          <input id="service-label" name="label" type="text" required maxlength="40" />
+        </div>
+        <div class="gestion-field">
+          <label for="service-icon">Ícono</label>
+          <select id="service-icon" name="icon">
+            <option value="burst">Destello (burst)</option>
+            <option value="sparkle">Chispa (sparkle)</option>
+            <option value="asterisk">Asterisco</option>
+            <option value="diamonds">Diamantes</option>
+            <option value="cube">Cubo</option>
+          </select>
+        </div>
+        <div class="gestion-field">
+          <label for="service-title">Título (para lectores de pantalla / futura página)</label>
+          <input id="service-title" name="title" type="text" required maxlength="60" />
+        </div>
+        <div class="gestion-field">
+          <label for="service-description">Descripción</label>
+          <textarea id="service-description" name="description" required></textarea>
+        </div>
+        <div class="gestion-form__actions">
+          <button type="submit" class="btn btn-primary" data-submit-label>Agregar servicio</button>
+          <button type="button" class="btn btn-ghost" data-cancel-edit hidden>Cancelar</button>
+        </div>
+        <p class="gestion-form__status" data-form-status aria-live="polite"></p>
+      </form>
+    </section>
+
+    <!-- 2. Projects -->
+    <section class="gestion-section" data-section="projects">
+      <h2>Proyectos</h2>
+      <ul class="gestion-list" data-list="projects"></ul>
+
+      <form class="gestion-form" data-form="projects">
+        <input type="hidden" data-edit-index value="" />
+        <div class="gestion-field">
+          <label for="project-title">Título del proyecto</label>
+          <input id="project-title" name="title" type="text" required maxlength="60" />
+        </div>
+        <div class="gestion-field">
+          <label for="project-category">Categoría (ej. "UI/UX · Fintech")</label>
+          <input id="project-category" name="category" type="text" required maxlength="40" />
+        </div>
+        <div class="gestion-field">
+          <label for="project-summary">Resumen (una línea)</label>
+          <textarea id="project-summary" name="summary" required></textarea>
+        </div>
+        <div class="gestion-field">
+          <label for="project-initials">Iniciales (2-3 letras, placeholder visual mientras no haya imagen real)</label>
+          <input id="project-initials" name="initials" type="text" required maxlength="3" />
+        </div>
+        <div class="gestion-form__actions">
+          <button type="submit" class="btn btn-primary" data-submit-label>Agregar proyecto</button>
+          <button type="button" class="btn btn-ghost" data-cancel-edit hidden>Cancelar</button>
+        </div>
+        <p class="gestion-form__status" data-form-status aria-live="polite"></p>
+      </form>
+    </section>
+
+    <!-- 3. Testimonials -->
+    <section class="gestion-section" data-section="testimonials">
+      <h2>Testimonios</h2>
+      <ul class="gestion-list" data-list="testimonials"></ul>
+
+      <form class="gestion-form" data-form="testimonials">
+        <input type="hidden" data-edit-index value="" />
+        <div class="gestion-field">
+          <label for="testimonial-quote">Cita</label>
+          <textarea id="testimonial-quote" name="quote" required></textarea>
+        </div>
+        <div class="gestion-field">
+          <label for="testimonial-name">Nombre</label>
+          <input id="testimonial-name" name="name" type="text" required maxlength="60" />
+        </div>
+        <div class="gestion-field">
+          <label for="testimonial-role">Cargo / empresa</label>
+          <input id="testimonial-role" name="role" type="text" required maxlength="60" />
+        </div>
+        <div class="gestion-form__actions">
+          <button type="submit" class="btn btn-primary" data-submit-label>Agregar testimonio</button>
+          <button type="button" class="btn btn-ghost" data-cancel-edit hidden>Cancelar</button>
+        </div>
+        <p class="gestion-form__status" data-form-status aria-live="polite"></p>
+      </form>
+    </section>
+
+    <!-- 4. Partners -->
+    <section class="gestion-section" data-section="partners">
+      <h2>Partners</h2>
+      <div class="gestion-chip-row" data-partners-chips></div>
+
+      <form class="gestion-form gestion-form--inline" data-form="partners">
+        <div class="gestion-field" style="flex: 1;">
+          <label for="partner-name" class="sr-only">Nombre del partner</label>
+          <input id="partner-name" name="name" type="text" required maxlength="40" placeholder="Nombre del partner" />
+        </div>
+        <button type="submit" class="btn btn-primary">Agregar</button>
+      </form>
+      <p class="gestion-form__status" data-form-status data-section-status="partners" aria-live="polite"></p>
+    </section>
+
+    <!-- Output -->
+    <section class="gestion-output">
+      <h2>JSON generado</h2>
+      <div class="gestion-output__actions">
+        <button type="button" class="btn btn-primary" data-copy-json>Copiar JSON</button>
+        <button type="button" class="btn btn-ghost" data-reset-data>Restaurar valores actuales del sitio</button>
+        <span class="gestion-output__status" data-copy-status aria-live="polite"></span>
+      </div>
+      <textarea class="gestion-output__textarea" data-output readonly aria-label="JSON generado, listo para pegar en index.html"></textarea>
+
+      <details class="gestion-import">
+        <summary>Importar un JSON existente (si editaste index.html a mano)</summary>
+        <textarea
+          data-import-textarea
+          placeholder='Pega acá el JSON completo: { "services": [...], "projects": [...], "testimonials": [...], "partners": [...] }'
+        ></textarea>
+        <button type="button" class="btn btn-ghost" data-import-btn>Cargar este JSON</button>
+        <p class="gestion-form__status" data-import-status aria-live="polite"></p>
+      </details>
+    </section>
+  </main>
+
+  <script src="js/theme.js" defer></script>
+  <script src="js/gestion.js" defer></script>
+</body>
+</html>

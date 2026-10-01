@@ -1,0 +1,322 @@
+/* Layout for the content-management panel (gestion.html). Reuses tokens.css
+   (color/type) and components.css (.btn) — this file only covers the
+   admin-specific pieces: header, section cards, list rows, forms and the
+   JSON output box.
+
+   layout.css is also linked in (just for .theme-toggle), and it has a bare
+   `section { padding: var(--space-7) 0; }` rule meant for the home page's
+   sections. Neutralize it here so it doesn't add a 6rem gap under every
+   section on this page — .gestion-section/.gestion-output below set their
+   own spacing. */
+
+main.gestion-main section {
+  padding: 0;
+}
+
+body {
+  padding-bottom: var(--space-6);
+}
+
+.gestion-header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-nav);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-5);
+  background: var(--color-bg-elevated);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.gestion-back {
+  font-size: var(--fs-small);
+  text-decoration: none;
+  color: var(--color-text-muted);
+}
+
+.gestion-back:hover,
+.gestion-back:focus-visible {
+  color: var(--color-text);
+}
+
+.gestion-header h1 {
+  margin: 0;
+  font-size: var(--fs-h3);
+  text-align: center;
+}
+
+.gestion-main {
+  width: min(100% - var(--space-5), 860px);
+  margin-inline: auto;
+  padding-top: var(--space-5);
+}
+
+.gestion-intro {
+  padding: var(--space-4);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-card);
+  color: var(--color-text-muted);
+  font-size: var(--fs-small);
+}
+
+.gestion-intro code {
+  color: var(--color-text);
+  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+}
+
+.gestion-section {
+  margin-top: var(--space-6);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-border);
+}
+
+.gestion-section h2 {
+  margin-bottom: var(--space-4);
+}
+
+/* --- Item list (existing entries) --- */
+.gestion-list {
+  list-style: none;
+  margin: 0 0 var(--space-4);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.gestion-list:empty::after {
+  content: "Todavía no hay elementos.";
+  display: block;
+  padding: var(--space-3);
+  color: var(--color-text-muted);
+  font-size: var(--fs-small);
+  font-style: italic;
+}
+
+.gestion-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  background: var(--color-bg-elevated);
+}
+
+.gestion-row__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.gestion-row__title {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.gestion-row__meta {
+  margin-top: var(--space-1);
+  font-size: var(--fs-small);
+  color: var(--color-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gestion-row__actions {
+  display: flex;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+.gestion-row__actions button {
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: var(--fs-small);
+}
+
+.gestion-row__actions button:hover,
+.gestion-row__actions button:focus-visible {
+  color: var(--color-text);
+  border-color: var(--color-text-muted);
+}
+
+.gestion-row__actions [data-action="remove"]:hover,
+.gestion-row__actions [data-action="remove"]:focus-visible {
+  color: #ff6b6b;
+  border-color: #ff6b6b;
+}
+
+/* --- Partners: plain chip list, no edit (just add/remove) --- */
+.gestion-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.gestion-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-2) var(--space-1) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-small);
+}
+
+.gestion-chip button {
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border: none;
+  border-radius: 50%;
+  background: var(--color-bg-elevated-2);
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  line-height: 1;
+}
+
+.gestion-chip button:hover,
+.gestion-chip button:focus-visible {
+  color: #ff6b6b;
+}
+
+/* --- Forms --- */
+.gestion-form {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+}
+
+.gestion-form--inline {
+  display: flex;
+  gap: var(--space-2);
+  padding: 0;
+  border: none;
+}
+
+.gestion-field {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.gestion-field label {
+  font-size: var(--fs-small);
+  color: var(--color-text-muted);
+}
+
+.gestion-field input,
+.gestion-field select,
+.gestion-field textarea {
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: var(--fs-body);
+}
+
+.gestion-field textarea {
+  resize: vertical;
+  min-height: 4.5em;
+}
+
+.gestion-field input:focus-visible,
+.gestion-field select:focus-visible,
+.gestion-field textarea:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
+}
+
+.gestion-form__actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.gestion-form__status {
+  font-size: var(--fs-small);
+  color: #ff6b6b;
+  min-height: 1.2em;
+}
+
+/* --- JSON output --- */
+.gestion-output {
+  margin-top: var(--space-7);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-border);
+}
+
+.gestion-output__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.gestion-output__status {
+  font-size: var(--fs-small);
+  color: var(--color-accent);
+}
+
+.gestion-output__textarea {
+  width: 100%;
+  min-height: 320px;
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  background: var(--color-bg-elevated);
+  color: var(--color-text);
+  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  white-space: pre;
+  overflow: auto;
+}
+
+.gestion-import {
+  margin-top: var(--space-5);
+}
+
+.gestion-import summary {
+  cursor: pointer;
+  color: var(--color-text-muted);
+  font-size: var(--fs-small);
+}
+
+.gestion-import[open] summary {
+  margin-bottom: var(--space-2);
+}
+
+.gestion-import textarea {
+  width: 100%;
+  min-height: 160px;
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-size: 0.8125rem;
+  margin-bottom: var(--space-2);
+}
+
+@media (max-width: 600px) {
+  .gestion-header h1 {
+    display: none;
+  }
+
+  .gestion-row {
+    flex-wrap: wrap;
+  }
+}
