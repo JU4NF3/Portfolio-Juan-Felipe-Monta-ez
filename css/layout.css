@@ -1,4 +1,4 @@
-/* Header, pill nav, mobile menu overlay, section shells and footer. */
+/* Header, nav tipo "pill", overlay del menú móvil, contenedores de sección y footer. */
 
 .site-header {
   position: relative;
@@ -29,10 +29,11 @@
   height: 20px;
 }
 
-/* --- Desktop pill nav, fixed bottom-center ---
-   Frosted glass: translucent fill + backdrop blur, so the page shows
-   through softly as it scrolls underneath. Glass colors are local tokens
-   because the pill floats over both dark and light/lime sections. */
+/* --- Nav tipo "pill" de escritorio, fija centrada abajo ---
+   Efecto de vidrio esmerilado: relleno translúcido + blur de fondo, para que
+   la página se vea suavemente a través mientras hace scroll debajo. Los
+   colores del vidrio son tokens locales porque la "pill" flota tanto sobre
+   secciones oscuras como claras/lima. */
 .nav-pill {
   --glass-bg: rgba(0, 0, 0, 0.35);
   --glass-border: rgba(255, 255, 255, 0.17);
@@ -66,7 +67,7 @@
   box-shadow: 0 10px 34px rgba(0, 0, 0, 0.16);
 }
 
-/* Browsers without backdrop-filter: a more opaque fill keeps text readable. */
+/* Navegadores sin backdrop-filter: un relleno más opaco mantiene el texto legible. */
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .nav-pill {
     --glass-bg: rgba(18, 18, 18, 0.92);
@@ -79,7 +80,7 @@
 
 .nav-pill__link {
   position: relative;
-  z-index: 1; /* above the sliding indicator */
+  z-index: 1; /* por encima del indicador deslizante */
   padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-pill);
   text-decoration: none;
@@ -89,9 +90,9 @@
   transition: color 0.3s var(--ease-default);
 }
 
-/* No hover background here: the sliding indicator previews the hovered
-   link instead (js/nav.js). Keyboard focus keeps its own fill, since the
-   indicator only follows the mouse. */
+/* Sin fondo de hover aquí: el indicador deslizante ya previsualiza el
+   enlace sobre el que está el cursor (js/nav.js). El foco de teclado
+   mantiene su propio relleno, ya que el indicador solo sigue al mouse. */
 .nav-pill__link:hover,
 .nav-pill__link[aria-current="true"] {
   color: var(--glass-text-strong);
@@ -102,9 +103,9 @@
   background: var(--glass-hover);
 }
 
-/* Sliding "you are here" highlight. nav.js sets its size and position
-   (via --x / --y / width / height) to match the active link; the slightly
-   overshooting curve gives it a soft bounce when it lands. */
+/* Resaltado deslizante de "estás aquí". nav.js ajusta su tamaño y posición
+   (vía --x / --y / width / height) para que coincida con el enlace activo;
+   la curva con ligero "overshoot" le da un rebote suave al aterrizar. */
 .nav-pill__indicator {
   position: absolute;
   top: 0;
@@ -114,7 +115,7 @@
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: var(--radius-pill);
   background: rgba(255, 255, 255, 0.14);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 0 16px rgba(198, 255, 61, 0.12);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 0 16px rgba(255, 214, 10, 0.12);
   opacity: 0;
   transform: translate(var(--x, 0px), var(--y, 0px));
   transition:
@@ -128,7 +129,7 @@
   opacity: 1;
 }
 
-/* First placement: appear in place instead of sliding in from the corner. */
+/* Primer posicionamiento: aparece en su lugar en vez de deslizarse desde la esquina. */
 .nav-pill__indicator.no-slide {
   transition: opacity 0.3s var(--ease-default);
 }
@@ -139,8 +140,9 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-/* Sections receive focus after an in-page jump (for keyboard and screen
-   reader users); don't draw a focus ring around the whole section. */
+/* Las secciones reciben foco tras un salto dentro de la página (para
+   usuarios de teclado y lectores de pantalla); no dibujar un anillo de
+   foco alrededor de toda la sección. */
 main > section:focus,
 footer:focus {
   outline: none;
@@ -191,7 +193,7 @@ footer:focus {
   display: block;
 }
 
-/* --- Mobile: pill nav is replaced by a single "Open menu" button --- */
+/* --- Móvil: la nav tipo "pill" se reemplaza por un solo botón "Abrir menú" --- */
 .nav-toggle {
   display: none;
   position: fixed;
@@ -289,7 +291,7 @@ footer:focus {
   }
 }
 
-/* --- Section shells --- */
+/* --- Contenedores de sección --- */
 section {
   padding: var(--space-7) 0;
   scroll-margin-top: var(--space-5);

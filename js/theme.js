@@ -1,6 +1,6 @@
-/* Light/dark theme toggle + persistence.
-   The initial theme is already applied by the inline anti-flash script in
-   <head> (before first paint) — this file only wires up the toggle buttons. */
+/* Cambio de tema claro/oscuro + persistencia.
+   El tema inicial ya lo aplica el script inline anti-flash en <head> (antes
+   del primer renderizado) — este archivo solo conecta los botones de cambio. */
 
 (function () {
   var STORAGE_KEY = "portfolio-theme";
@@ -18,7 +18,7 @@
     try {
       localStorage.setItem(STORAGE_KEY, theme);
     } catch (e) {
-      /* localStorage unavailable (private mode, etc.) — theme just won't persist. */
+      /* localStorage no disponible (modo privado, etc.) — el tema simplemente no persistirá. */
     }
     document.querySelectorAll("[data-theme-toggle]").forEach(function (button) {
       button.setAttribute("aria-pressed", theme === "light" ? "true" : "false");

@@ -1,8 +1,9 @@
-/* Preloader with a % counter. There are no real heavy assets to track yet,
-   so progress is a GSAP tween eased toward ~90%, tied to real readiness
-   signals (fonts + window load + content rendered, see main.js) for the
-   final jump to 100%. On completion it fades the preloader out and tells
-   the panel-transition system to reveal the page (see page-transition.js). */
+/* Preloader con un contador de %. Todavía no hay assets pesados reales que
+   rastrear, así que el progreso es un tween de GSAP suavizado hacia ~90%,
+   ligado a señales reales de disponibilidad (fuentes + window load +
+   contenido renderizado, ver main.js) para el salto final a 100%. Al
+   terminar, desvanece el preloader y le avisa al sistema de panel-transition
+   que revele la página (ver page-transition.js). */
 
 (function () {
   var preloader = document.querySelector("[data-preloader]");
@@ -73,9 +74,10 @@
         window.addEventListener("load", resolve, { once: true });
       }
     }),
-    // main.js resolves this once the sections are rendered from #info-data
-    // — kept as a promise (even though rendering is synchronous today) so
-    // the preloader stays correct if that ever becomes async again.
+    // main.js resuelve esto una vez que las secciones se renderizan desde
+    // #info-data — se mantiene como promesa (aunque el renderizado hoy es
+    // síncrono) para que el preloader siga siendo correcto si eso vuelve a
+    // ser asíncrono algún día.
     window.PortfolioContentLoaded || Promise.resolve(),
   ]).then(finish);
 })();

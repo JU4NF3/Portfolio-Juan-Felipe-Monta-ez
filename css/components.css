@@ -1,12 +1,12 @@
-/* Buttons, cards, chips, testimonials, partners, preloader and panel transition. */
+/* Botones, tarjetas, chips, testimonios, aliados, preloader y transición de paneles. */
 
-/* --- Buttons --- */
+/* --- Botones --- */
 .btn {
   --btn-shine: rgba(255, 255, 255, 0.35);
 
   position: relative;
   overflow: hidden;
-  isolation: isolate; /* keeps the shine (z-index -1) above the button's own background */
+  isolation: isolate; /* mantiene el brillo (z-index -1) por encima del propio fondo del botón */
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
@@ -15,18 +15,19 @@
   font-weight: 600;
   text-decoration: none;
   border: 1px solid transparent;
-  /* No `transform` here: GSAP animates the hero buttons' transform on
-     entry, and a CSS transition on it would make that tween lag. */
+  /* Sin `transform` aquí: GSAP anima el transform de los botones del hero
+     al entrar, y una transición CSS sobre él haría que ese tween se atrase. */
   transition:
     background-color 0.3s var(--ease-default),
     border-color 0.3s var(--ease-default),
     box-shadow 0.3s var(--ease-default);
 }
 
-/* Shine — same as the About chips: a diagonal light band parked off the
-   left edge that slides to the middle on hover and back out on leave
-   (transition on the base state, so it animates both ways). It sits
-   behind the label, so the text never gets washed out. */
+/* Brillo — igual que los chips de About: una banda de luz diagonal
+   estacionada fuera del borde izquierdo que se desliza hasta el medio en
+   hover y vuelve a salir al soltar (la transición vive en el estado base,
+   así anima en ambas direcciones). Queda detrás de la etiqueta, para que
+   el texto nunca se lave. */
 .btn::before {
   content: "";
   position: absolute;
@@ -43,7 +44,7 @@
   transform: translateX(0);
 }
 
-/* Primary: white shine on lime + a soft lime glow. */
+/* Primario: brillo blanco sobre lima + un suave resplandor lima. */
 .btn-primary {
   --btn-shine: rgba(255, 255, 255, 0.6);
   background: var(--color-accent);
@@ -53,10 +54,10 @@
 .btn-primary:hover,
 .btn-primary:focus-visible {
   transform: translateY(-1px);
-  box-shadow: 0 8px 24px rgba(198, 255, 61, 0.25);
+  box-shadow: 0 8px 24px rgba(255, 214, 10, 0.25);
 }
 
-/* Ghost: glassy fill, the border lights up, faint white shine. */
+/* Ghost: relleno tipo vidrio, el borde se ilumina, brillo blanco tenue. */
 .btn-ghost {
   --btn-shine: rgba(255, 255, 255, 0.18);
   background: transparent;
@@ -68,7 +69,7 @@
 .btn-ghost:focus-visible {
   background: rgba(255, 255, 255, 0.06);
   border-color: rgba(255, 255, 255, 0.45);
-  box-shadow: 0 0 18px rgba(198, 255, 61, 0.15);
+  box-shadow: 0 0 18px rgba(255, 214, 10, 0.15);
 }
 
 [data-theme="light"] .btn-ghost {
@@ -81,7 +82,21 @@
   border-color: rgba(0, 0, 0, 0.3);
 }
 
-/* --- About lead paragraph --- */
+/* El hero se mantiene oscuro en el tema claro, así que su botón ghost
+   conserva ahí texto blanco y borde blanco. */
+[data-theme="light"] .hero .btn-ghost {
+  --btn-shine: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  border-color: #fff;
+}
+
+[data-theme="light"] .hero .btn-ghost:hover,
+[data-theme="light"] .hero .btn-ghost:focus-visible {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: #fff;
+}
+
+/* --- Párrafo principal de About --- */
 .about p[data-split-about] {
   font-family: var(--font-heading);
   font-weight: 500;
@@ -91,31 +106,32 @@
   max-width: 900px;
 }
 
-/* --- Chips (About section) — infinite marquee of focus areas --- */
+/* --- Chips (sección About) — marquesina infinita de áreas de enfoque --- */
 .chip-marquee {
   overflow: hidden;
   margin-top: var(--space-5);
-  /* Fade the edges so chips don't look like they're cut off mid-pill. */
+  /* Difumina los bordes para que los chips no se vean cortados a la mitad. */
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
   mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
 }
 
-/* Without JS the chips simply wrap; main.js adds .chip-marquee--ready once
-   it has cloned enough sets to fill the width, which turns on the loop. */
+/* Sin JS los chips simplemente hacen wrap; main.js agrega .chip-marquee--ready
+   una vez que ha clonado suficientes conjuntos para llenar el ancho, lo que
+   activa el loop. */
 .chip-list {
   list-style: none;
   display: flex;
   flex-wrap: wrap;
   row-gap: var(--space-2);
   margin: 0;
-  padding: var(--space-1) 0; /* room for the hover glow */
+  padding: var(--space-1) 0; /* espacio para el resplandor del hover */
 }
 
 .chip-marquee--ready .chip-list {
   flex-wrap: nowrap;
   width: max-content;
-  /* Duration is set by main.js from the track width, so the speed stays
-     the same however many copies were needed. */
+  /* La duración la define main.js a partir del ancho de la pista, para que
+     la velocidad se mantenga igual sin importar cuántas copias hicieron falta. */
   animation: chip-marquee var(--marquee-duration, 30s) linear infinite;
 }
 
@@ -128,11 +144,12 @@
   position: relative;
   overflow: hidden;
   flex: 0 0 auto;
-  /* Spacing via margin, not `gap`: with the duplicate-track technique below,
-     `gap` leaves an extra half-gap at the 50% loop point (it isn't "inside"
-     either copy), which reads as a stutter/cut. A trailing margin on every
-     item — including the last one of each copy — is part of that item's own
-     box, so the copies line up exactly at the midpoint. */
+  /* Espaciado vía margin, no `gap`: con la técnica de pista duplicada de
+     abajo, `gap` deja un medio-espacio extra en el punto de loop al 50%
+     (no está "dentro" de ninguna de las dos copias), lo cual se percibe
+     como un tirón/corte. Un margen al final de cada ítem — incluyendo el
+     último de cada copia — es parte de la caja propia de ese ítem, así las
+     copias encajan exactamente en el punto medio. */
   margin-right: var(--space-2);
   padding: var(--space-2) var(--space-3);
   border: 1px solid var(--color-border);
@@ -158,10 +175,10 @@
   --chip-shine: rgba(255, 255, 255, 0.9);
 }
 
-/* Shine: a diagonal light band parked off the left edge. On hover it
-   slides in and stops at the middle of the pill; on leave it slides back
-   out the way it came (the transition lives on the base state, so it runs
-   in both directions). */
+/* Brillo: una banda de luz diagonal estacionada fuera del borde izquierdo.
+   En hover se desliza hacia adentro y se detiene a la mitad de la pill; al
+   soltar se desliza de vuelta por donde entró (la transición vive en el
+   estado base, así corre en ambas direcciones). */
 .chip-list li::after {
   content: "";
   position: absolute;
@@ -176,16 +193,16 @@
   color: var(--color-text);
   background: var(--chip-bg-hover);
   border-color: var(--chip-border-hover);
-  box-shadow: 0 0 18px rgba(198, 255, 61, 0.18);
+  box-shadow: 0 0 18px rgba(255, 214, 10, 0.18);
 }
 
 .chip-list li:hover::after {
   transform: translateX(0);
 }
 
-/* main.js fills the track with 2N copies of the set; looping by exactly
-   -50% lines the end of copy N up with the start of copy N+1, so the
-   restart to 0% is invisible and there's never an empty gap. */
+/* main.js llena la pista con 2N copias del conjunto; hacer loop exactamente
+   en -50% alinea el final de la copia N con el inicio de la copia N+1, así
+   el reinicio a 0% es invisible y nunca hay un espacio vacío. */
 @keyframes chip-marquee {
   from {
     transform: translateX(0);
@@ -195,14 +212,14 @@
   }
 }
 
-/* --- Grid shells --- */
+/* --- Contenedores de grid --- */
 .card-grid {
   display: grid;
   gap: var(--space-4);
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
 }
 
-/* --- Services header --- */
+/* --- Encabezado de Services --- */
 .services-head {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
@@ -266,7 +283,7 @@
   transform: scale(0.97);
 }
 
-/* --- Services list: big rows, rolling title, scroll-rotated icon --- */
+/* --- Lista de Services: filas grandes, título rotativo, ícono que gira con scroll --- */
 .services-list {
   display: flex;
   flex-direction: column;
@@ -294,7 +311,7 @@
   height: clamp(2rem, 5vw, 4.375rem);
 }
 
-/* One line tall window; the duplicate waits just below it. */
+/* Ventana de la altura de una línea; el duplicado espera justo debajo. */
 .service-row__title {
   display: block;
   overflow: hidden;
@@ -320,7 +337,7 @@
   color: var(--color-text);
 }
 
-/* Roll only with a real pointer — on touch, hover sticks after a tap. */
+/* Rotar solo con un puntero real — en touch, el hover se queda pegado tras un tap. */
 @media (hover: hover) and (pointer: fine) {
   .service-row:hover .service-row__roll {
     transform: translateY(-100%);
@@ -331,7 +348,7 @@
   transform: translateY(-100%);
 }
 
-/* --- Who I build for --- */
+/* --- Para quién trabajo --- */
 .who-i-build-for {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
@@ -389,10 +406,10 @@
   }
 }
 
-/* --- Statement: text on a curve, pinned while it scrolls ---
-   Default (no JS / reduced motion): a plain centered heading.
-   animations.js adds .statement--animated to swap in the SVG curve and
-   give the track its 300vh of scroll for the pinned stage. */
+/* --- Statement: texto sobre una curva, fijo ("pinned") mientras se hace scroll ---
+   Por defecto (sin JS / movimiento reducido): un encabezado simple y centrado.
+   animations.js agrega .statement--animated para intercambiar la curva SVG y
+   darle a la pista sus 300vh de scroll para el escenario fijo. */
 .statement {
   padding: 0;
 }
@@ -421,8 +438,8 @@
   overflow: visible;
 }
 
-/* Size is in SVG user units (viewBox is 1516 wide), so the text scales
-   with the viewport instead of with CSS px. */
+/* El tamaño está en unidades de usuario SVG (el viewBox mide 1516 de ancho),
+   así el texto escala con el viewport en vez de con px de CSS. */
 .statement__curve text {
   font-family: var(--font-body);
   font-weight: 400;
@@ -447,7 +464,7 @@
   display: block;
 }
 
-/* Heading stays in the DOM for screen readers, the curve is decorative. */
+/* El encabezado se mantiene en el DOM para lectores de pantalla, la curva es decorativa. */
 .statement--animated .statement__text {
   position: absolute;
   width: 1px;
@@ -463,7 +480,7 @@
   }
 }
 
-/* --- Works rows (one per project) --- */
+/* --- Filas de Works (una por proyecto) --- */
 .works-list {
   display: flex;
   flex-direction: column;
@@ -528,10 +545,11 @@
   gap: var(--space-4);
 }
 
-/* --- Work media: clip-path reveal + hover zoom ---
-   Visible by default, so the page still works without JS / GSAP.
-   animations.js adds .works-list--reveal to the list (motion allowed only)
-   to arm the hidden state, then .is-in-view to each media on scroll. */
+/* --- Media de Works: reveal con clip-path + zoom en hover ---
+   Visible por defecto, para que la página siga funcionando sin JS / GSAP.
+   animations.js agrega .works-list--reveal a la lista (solo si el
+   movimiento está permitido) para armar el estado oculto, y luego
+   .is-in-view a cada media al hacer scroll. */
 .work-media {
   position: relative;
   display: block;
@@ -542,7 +560,7 @@
 }
 
 .work-media--side {
-  aspect-ratio: auto; /* stretches to the main image's height */
+  aspect-ratio: auto; /* se estira hasta la altura de la imagen principal */
 }
 
 .work-media__inner {
@@ -556,7 +574,7 @@
     transform 0.8s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
-/* Fills the frame; swap for <img> with object-fit: cover later. */
+/* Llena el marco; cambiar luego por <img> con object-fit: cover. */
 .work-media__inner > * {
   width: 100%;
   height: 100%;
@@ -565,7 +583,7 @@
   transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Armed: hidden from the top-left corner, image slightly zoomed in. */
+/* Armado: oculto desde la esquina superior izquierda, imagen ligeramente ampliada. */
 .works-list--reveal .work-media__inner {
   clip-path: inset(0 100% 100% 0 round 0.5rem);
 }
@@ -574,7 +592,7 @@
   transform: scale(1.14);
 }
 
-/* In view: wipe open to the bottom-right while the image settles. */
+/* En vista: se abre en barrido hacia la esquina inferior derecha mientras la imagen se asienta. */
 .works-list--reveal .work-media.is-in-view .work-media__inner {
   clip-path: inset(0 round 0.5rem);
 }
@@ -583,13 +601,13 @@
   transform: scale(1);
 }
 
-/* Side image starts a beat after the main one. */
+/* La imagen lateral arranca un instante después que la principal. */
 .works-list--reveal .work-media--side .work-media__inner,
 .works-list--reveal .work-media--side .work-media__inner > * {
   transition-delay: 0.15s;
 }
 
-/* Hover: corners square off and the image zooms in. */
+/* Hover: las esquinas se cuadran y la imagen hace zoom. */
 .work-media:hover,
 .work-media:focus-visible {
   border-radius: 0;
@@ -634,7 +652,7 @@
   font-size: 2rem;
   font-weight: 600;
   color: var(--color-accent-text);
-  background: linear-gradient(135deg, var(--color-accent), #6fe0c9);
+  background: linear-gradient(135deg, var(--color-accent), #ff9f1c);
 }
 
 .media-placeholder--alt {
@@ -644,12 +662,12 @@
   border: 1px solid var(--color-border);
 }
 
-/* --- CTA to works --- */
+/* --- CTA hacia works --- */
 .works-cta {
   text-align: center;
 }
 
-/* No card: just the heading on the page background. */
+/* Sin tarjeta: solo el encabezado sobre el fondo de la página. */
 .works-cta__inner {
   padding: var(--space-6) var(--space-4);
 }
@@ -659,11 +677,12 @@
   margin: 0 auto var(--space-5);
 }
 
-/* --- Testimonials: card fan ---
-   Default (no JS, reduced motion, < 992px): a plain grid of cards.
-   animations.js adds .testimonial-fan--orbit on desktop to turn each
-   .testimonial-orbit into a 300vw square centered under its card, so
-   rotating the wrapper swings the card along a very wide arc. */
+/* --- Testimonials: abanico de tarjetas ---
+   Por defecto (sin JS, movimiento reducido, < 992px): una grilla simple de
+   tarjetas. animations.js agrega .testimonial-fan--orbit en escritorio para
+   convertir cada .testimonial-orbit en un cuadrado de 300vw centrado bajo
+   su tarjeta, así rotar el wrapper balancea la tarjeta a lo largo de un
+   arco muy amplio. */
 .testimonial-fan {
   display: grid;
   gap: var(--space-4);
@@ -690,7 +709,7 @@
 }
 
 [data-theme="light"] .testimonial-card__step {
-  color: var(--color-text-muted); /* lime is too pale on white */
+  color: var(--color-text-muted); /* el lima se ve demasiado pálido sobre blanco */
 }
 
 .testimonial-card blockquote {
@@ -716,12 +735,13 @@
   color: var(--color-text);
 }
 
-/* Desktop orbit mode */
+/* Modo órbita de escritorio */
 .testimonial-fan--orbit {
   position: relative;
   display: block;
   height: 44rem;
-  /* Bleed to the viewport edges so cards can swing in from off-screen. */
+  /* Se extiende hasta los bordes del viewport para que las tarjetas puedan
+     entrar balanceándose desde fuera de pantalla. */
   margin-inline: calc(50% - 50vw);
   overflow: hidden;
 }
@@ -738,7 +758,7 @@
 
 .testimonial-fan--orbit .testimonial-card {
   position: absolute;
-  top: 22rem; /* vertical center of the fan */
+  top: 22rem; /* centro vertical del abanico */
   left: 50%;
   width: 22.5rem;
   height: 31rem;
@@ -746,10 +766,10 @@
   pointer-events: auto;
 }
 
-/* --- Closing footer (partners + contact) ---
-   Always dark, in both themes, so it reads as the end of the page.
-   .closing__layer--spot is a clone of the layer, painted in the accent
-   color and masked to a circle at --spot-x / --spot-y (animations.js). */
+/* --- Footer de cierre (aliados + contacto) ---
+   Siempre oscuro, en ambos temas, para que se lea como el final de la
+   página. .closing__layer--spot es un clon de la capa, pintado en el color
+   de acento y enmascarado a un círculo en --spot-x / --spot-y (animations.js). */
 .closing {
   --closing-bg: #0f0f0f;
   --closing-text: #f1f1f1;
@@ -771,7 +791,7 @@
 .closing__title {
   display: flex;
   flex-direction: column;
-  /* Replaces the space the removed {Aliados} bracket header used to take. */
+  /* Ocupa el espacio que antes tomaba el encabezado con corchetes {Aliados}, ya eliminado. */
   margin: clamp(var(--space-5), 8vw, 6rem) 0 var(--space-6) -0.06em;
   font-family: var(--font-body);
   font-weight: 500;
@@ -848,7 +868,7 @@
   font-size: var(--fs-h3);
 }
 
-/* Spotlight copy: same layout on top, accent color, circle mask. */
+/* Copia "spotlight": mismo layout encima, color de acento, máscara circular. */
 .closing__layer--spot {
   position: absolute;
   inset: 0;
@@ -890,7 +910,7 @@
   }
 }
 
-/* --- Preloader --- */
+/* --- Preloader (pantalla de carga) --- */
 .preloader {
   position: fixed;
   inset: 0;
@@ -923,7 +943,7 @@
   color: var(--color-text-muted);
 }
 
-/* --- 6-panel page transition --- */
+/* --- Transición de página de 6 paneles --- */
 .panel-transition {
   position: fixed;
   inset: 0;
@@ -939,8 +959,9 @@
   transform-origin: top;
 }
 
-/* Panels start covering the screen so there is never a flash of
-   unrevealed content before preloader.js runs revealOnEntry(). */
+/* Los paneles empiezan cubriendo la pantalla para que nunca haya un
+   parpadeo de contenido sin revelar antes de que preloader.js ejecute
+   revealOnEntry(). */
 .panel-transition[data-state="revealed"] .panel-transition__panel {
   transform: scaleY(0);
   transform-origin: bottom;
@@ -953,7 +974,7 @@
   transition: transform var(--duration-panel) var(--ease-default);
 }
 
-/* Slight stagger between panels so they don't move as one flat block. */
+/* Pequeño desfase entre paneles para que no se muevan como un solo bloque plano. */
 .panel-transition__panel:nth-child(1) { transition-delay: 0ms; }
 .panel-transition__panel:nth-child(2) { transition-delay: 40ms; }
 .panel-transition__panel:nth-child(3) { transition-delay: 80ms; }

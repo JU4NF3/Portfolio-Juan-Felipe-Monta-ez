@@ -1,4 +1,4 @@
-/* Reset + base typography + small utilities shared across the page. */
+/* Reset + tipografía base + pequeñas utilidades compartidas en toda la página. */
 
 *,
 *::before,
@@ -20,7 +20,7 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   transition: background-color 0.3s var(--ease-default), color 0.3s var(--ease-default);
-  /* Room at the bottom so content never sits under the fixed pill nav. */
+  /* Espacio abajo para que el contenido nunca quede debajo de la nav fija. */
   padding-bottom: calc(var(--nav-height) + var(--space-5));
 }
 
@@ -71,7 +71,7 @@ button {
   margin-inline: auto;
 }
 
-/* Visually hidden but reachable by assistive tech. */
+/* Oculto visualmente pero accesible para tecnología de asistencia. */
 .sr-only {
   position: absolute;
   width: 1px;

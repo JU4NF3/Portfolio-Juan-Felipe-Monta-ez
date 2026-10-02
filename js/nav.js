@@ -1,4 +1,4 @@
-/* Mobile "open menu" overlay: open/close, Escape to close, focus trap + return. */
+/* Overlay móvil "abrir menú": abrir/cerrar, Escape para cerrar, trampa de foco + retorno. */
 
 (function () {
   var toggle = document.querySelector("[data-nav-toggle]");
@@ -38,7 +38,7 @@
       closeMenu();
       return;
     }
-    // Minimal focus trap: keep Tab cycling within the menu while it's open.
+    // Trampa de foco mínima: mantiene el Tab circulando dentro del menú mientras está abierto.
     if (event.key === "Tab") {
       var focusables = focusableElements();
       if (!focusables.length) return;
@@ -58,17 +58,18 @@
   toggle.addEventListener("click", openMenu);
   if (closeBtn) closeBtn.addEventListener("click", closeMenu);
 
-  // Close automatically when a menu link is used to jump to a section.
+  // Se cierra automáticamente cuando un enlace del menú se usa para saltar a una sección.
   menu.querySelectorAll("a[href]").forEach(function (link) {
     link.addEventListener("click", closeMenu);
   });
 })();
 
-/* Desktop pill nav: "you are here" indicator.
-   Scroll-spy picks the section whose top has passed 40% of the viewport
-   (the last one, going down the page) and slides the glass indicator to
-   its link. Hovering another link previews it; leaving the nav slides the
-   indicator back. Above the first section (in the hero) nothing is active. */
+/* Nav tipo "pill" de escritorio: indicador de "estás aquí".
+   El scroll-spy elige la sección cuyo borde superior ya pasó el 40% del
+   viewport (la última, bajando por la página) y desliza el indicador de
+   vidrio hasta su enlace. Pasar el mouse sobre otro enlace lo previsualiza;
+   al salir de la nav el indicador vuelve a su lugar. Por encima de la
+   primera sección (en el hero) nada está activo. */
 (function () {
   var nav = document.querySelector("[data-nav-pill]");
   var indicator = nav && nav.querySelector("[data-nav-indicator]");
@@ -84,7 +85,7 @@
     });
 
   var activeLink = null;
-  var placed = false; // first placement appears in place, later ones slide
+  var placed = false; // el primer posicionamiento aparece en su lugar, los siguientes se deslizan
 
   function moveTo(link) {
     if (!link) {
@@ -99,7 +100,7 @@
     indicator.classList.add("is-visible");
     if (!placed) {
       placed = true;
-      // Let that first position render before enabling the slide.
+      // Deja que esa primera posición se renderice antes de habilitar el deslizamiento.
       requestAnimationFrame(function () {
         requestAnimationFrame(function () {
           indicator.classList.remove("no-slide");
@@ -144,7 +145,7 @@
     moveTo(activeLink);
   });
 
-  // Link widths change on resize and once the web font loads.
+  // El ancho de los enlaces cambia al redimensionar y cuando carga la web font.
   function remeasure() {
     if (activeLink) moveTo(activeLink);
   }
@@ -154,11 +155,11 @@
   update();
 })();
 
-/* Eased scroll for in-page links (#about, #works, #hero…): starts gently,
-   speeds up, and settles slowly at the target, instead of the browser's
-   short linear smooth-scroll. Duration grows with distance (0.8s–1.6s).
-   Falls back to the native behavior without GSAP/ScrollToPlugin, and jumps
-   directly with reduced motion. */
+/* Scroll suavizado para enlaces internos (#about, #works, #hero…): empieza
+   suave, acelera y se asienta lentamente en el destino, en vez del
+   smooth-scroll lineal y corto del navegador. La duración crece con la
+   distancia (0.8s–1.6s). Vuelve al comportamiento nativo sin
+   GSAP/ScrollToPlugin, y salta directo con movimiento reducido. */
 (function () {
   if (typeof gsap === "undefined" || typeof ScrollToPlugin === "undefined") return;
   gsap.registerPlugin(ScrollToPlugin);
@@ -170,7 +171,7 @@
     var link = event.target.closest && event.target.closest('a[href^="#"]');
     if (!link) return;
     var hash = link.getAttribute("href");
-    if (hash === "#" || hash.length < 2) return; // placeholder links (TODOs)
+    if (hash === "#" || hash.length < 2) return; // enlaces placeholder (TODOs)
     var target = document.querySelector(hash);
     if (!target) return;
 
@@ -182,14 +183,14 @@
     function arrive() {
       rootStyle.scrollBehavior = "";
       history.pushState(null, "", hash);
-      // Move focus to the section so keyboard / screen reader users land
-      // there too, without a second scroll.
+      // Mueve el foco a la sección para que los usuarios de teclado / lector
+      // de pantalla también lleguen ahí, sin un segundo scroll.
       if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
       target.focus({ preventScroll: true });
     }
 
-    // base.css has `scroll-behavior: smooth`; with it on, every scroll
-    // position GSAP sets would itself be smoothed, and the tween stutters.
+    // base.css tiene `scroll-behavior: smooth`; con eso activo, cada
+    // posición de scroll que GSAP fije se suavizaría por sí misma, y el tween se traba.
     rootStyle.scrollBehavior = "auto";
 
     if (reduceMotion.matches) {
@@ -201,7 +202,7 @@
     gsap.to(window, {
       duration: gsap.utils.clamp(0.8, 1.6, 0.6 + distance / 4000),
       ease: "power3.inOut",
-      // autoKill: if the visitor scrolls by hand mid-way, stop and let them.
+      // autoKill: si el visitante hace scroll a mano a mitad de camino, se detiene y lo deja.
       scrollTo: { y: target, autoKill: true },
       overwrite: true,
       onComplete: arrive,

@@ -1,21 +1,21 @@
-/* Design tokens — single source of truth for color, type and spacing.
-   Dark is the default theme (per Resumen.md); [data-theme="light"] overrides it. */
+/* Tokens de diseño — fuente única de verdad para color, tipografía y espaciado.
+   El oscuro es el tema por defecto (según Resumen.md); [data-theme="light"] lo sobrescribe. */
 
 :root {
-  /* Color — dark (default) */
+  /* Color — oscuro (por defecto) */
   --color-bg: #121212;
   --color-bg-elevated: #1a1a1a;
   --color-bg-elevated-2: #202020;
   --color-text: #f5f5f5;
   --color-text-muted: #a3a3a3;
   --color-border: rgba(255, 255, 255, 0.12);
-  --color-accent: #c6ff3d;
+  --color-accent: #ffd60a;
   --color-accent-text: #121212;
 
-  /* Type */
+  /* Tipografía */
   --font-heading: "Poppins", "Montserrat", sans-serif;
   --font-body: "Montserrat", "Poppins", sans-serif;
-  --font-display: "Instrument Serif", Georgia, serif; /* italic accents only */
+  --font-display: "Instrument Serif", Georgia, serif; /* solo para acentos en cursiva */
 
   --fs-hero: clamp(2.5rem, 6vw + 1rem, 5.5rem);
   --fs-h2: clamp(1.75rem, 3vw + 1rem, 2.75rem);
@@ -23,7 +23,7 @@
   --fs-body: 1rem;
   --fs-small: 0.875rem;
 
-  /* Spacing scale */
+  /* Escala de espaciado */
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 1rem;
@@ -32,17 +32,17 @@
   --space-6: 4rem;
   --space-7: 6rem;
 
-  /* Shape / layout */
+  /* Forma / layout */
   --radius-pill: 999px;
   --radius-card: 1.25rem;
   --container-max: 1180px;
   --nav-height: 64px;
 
-  /* Motion */
+  /* Movimiento */
   --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
   --duration-panel: 900ms;
 
-  /* Layering */
+  /* Capas (z-index) */
   --z-nav: 50;
   --z-mobile-menu: 80;
   --z-panels: 90;

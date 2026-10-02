@@ -1,19 +1,23 @@
-/* Hero WebGL shader — soft, slowly drifting bands of green light, plus a
-   glow that follows the cursor while it's over the hero. No libraries,
-   plain `canvas.getContext('webgl')`.
+/* Shader WebGL del hero — bandas suaves de luz verde que se mueven
+   lentamente, más un resplandor que sigue al cursor mientras está sobre el
+   hero. Sin librerías, `canvas.getContext('webgl')` puro.
 
-   How the bands work: a few sine waves across x are summed; their phase is
-   bent by other sines over y and time, so the bands sway and breathe
-   instead of sliding. The sum is squared to keep the dark gaps wide and
-   the bright cores narrow, then mapped through a dark-green → lime palette.
+   Cómo funcionan las bandas: se suman unas cuantas ondas seno a lo largo
+   de x; su fase se curva con otras ondas seno sobre y y el tiempo, así las
+   bandas se mecen y respiran en vez de deslizarse. La suma se eleva al
+   cuadrado para mantener los espacios oscuros anchos y los núcleos
+   brillantes angostos, y luego se mapea a través de una paleta
+   verde-oscuro → lima.
 
-   Cursor glow: the mouse position (eased toward the real pointer each
-   frame, so it trails a little) adds light within a radius; u_hover fades
-   that glow in when the pointer enters the hero and out when it leaves.
+   Resplandor del cursor: la posición del mouse (suavizada hacia el puntero
+   real en cada frame, para que vaya un poco rezagada) agrega luz dentro de
+   un radio; u_hover desvanece ese resplandor al entrar el puntero al hero
+   y lo apaga al salir.
 
-   Degrades gracefully: the .hero section already has a CSS gradient behind
-   the canvas (see hero.css), so if WebGL is unavailable or compilation
-   fails, we just bail out early and that gradient is all the visitor sees. */
+   Degrada con elegancia: la sección .hero ya tiene un gradiente CSS detrás
+   del canvas (ver hero.css), así que si WebGL no está disponible o la
+   compilación falla, simplemente se sale temprano y ese gradiente es todo
+   lo que ve el visitante. */
 
 (function () {
   var canvas = document.querySelector("[data-hero-canvas]");
@@ -21,7 +25,7 @@
   var hero = canvas.closest(".hero") || canvas.parentElement;
 
   var gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
-  if (!gl) return; // No WebGL support — CSS fallback gradient stays visible.
+  if (!gl) return; // Sin soporte WebGL — el gradiente de respaldo en CSS se mantiene visible.
 
   var VERTEX_SRC = [
     "attribute vec2 a_position;",
@@ -34,14 +38,14 @@
     "precision mediump float;",
     "uniform float u_time;",
     "uniform vec2 u_resolution;",
-    "uniform vec2 u_mouse;   // 0..1, origin bottom-left",
-    "uniform float u_hover;  // 0..1, glow strength",
+    "uniform vec2 u_mouse;   // 0..1, origen abajo-izquierda",
+    "uniform float u_hover;  // 0..1, intensidad del resplandor",
     "",
     "float hash(vec2 p) {",
     "  return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);",
     "}",
     "",
-    "// Brightness of the light bands at uv (0 = dark gap, 1 = band core).",
+    "// Brillo de las bandas de luz en uv (0 = espacio oscuro, 1 = núcleo de la banda).",
     "float bands(vec2 uv, float t) {",
     "  float sway = sin(uv.y * 2.1 - t * 0.55) + 0.5 * sin(uv.y * 0.9 + t * 0.3 + 2.0);",
     "  float w = sin(uv.x * 7.0 + sway * 1.3 + t * 0.6) * 0.6",
@@ -55,21 +59,21 @@
     "  float t = u_time * 0.3;",
     "  float f = bands(uv, t);",
     "",
-    "  // Cursor glow, round regardless of the canvas aspect ratio.",
+    "  // Resplandor del cursor, redondo sin importar el aspect ratio del canvas.",
     "  vec2 aspect = vec2(u_resolution.x / u_resolution.y, 1.0);",
     "  float d = distance(uv * aspect, u_mouse * aspect);",
     "  f += smoothstep(0.45, 0.0, d) * 0.6 * u_hover;",
     "",
-    "  vec3 deep   = vec3(0.020, 0.055, 0.020);",
-    "  vec3 mid    = vec3(0.180, 0.360, 0.050);",
-    "  vec3 bright = vec3(0.640, 0.900, 0.200); // a touch under the #c6ff3d accent",
+    "  vec3 deep   = vec3(0.055, 0.045, 0.010);",
+    "  vec3 mid    = vec3(0.380, 0.300, 0.020);",
+    "  vec3 bright = vec3(0.950, 0.780, 0.050); // un poco por debajo del acento #ffd60a",
     "  vec3 col = mix(deep, mid, smoothstep(0.12, 0.65, f));",
     "  col = mix(col, bright, smoothstep(0.78, 1.10, f));",
     "",
-    "  // Fade toward the page background at the bottom of the hero.",
+    "  // Se desvanece hacia el fondo de la página en la parte inferior del hero.",
     "  col *= mix(0.25, 1.0, smoothstep(0.0, 0.5, uv.y));",
     "",
-    "  // Fine grain so the gradients don't band on 8-bit screens.",
+    "  // Grano fino para que los gradientes no se vean a bandas en pantallas de 8 bits.",
     "  col += (hash(gl_FragCoord.xy) - 0.5) * 0.02;",
     "  gl_FragColor = vec4(col, 1.0);",
     "}",
@@ -107,7 +111,7 @@
       return;
     }
 
-    // Single full-viewport triangle (covers the screen without a second one).
+    // Un solo triángulo a pantalla completa (cubre la pantalla sin necesitar un segundo).
     var positionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     gl.bufferData(
@@ -130,8 +134,8 @@
     return;
   }
 
-  // The field is very smooth, so rendering at 1x even on retina screens
-  // looks the same and costs a quarter of the pixels.
+  // El campo es muy suave, así que renderizar a 1x incluso en pantallas
+  // retina se ve igual y cuesta una cuarta parte de los píxeles.
   function resize() {
     var width = Math.max(2, Math.round(canvas.clientWidth));
     var height = Math.max(2, Math.round(canvas.clientHeight));
@@ -142,8 +146,9 @@
     }
   }
 
-  // Pointer state: `target` is where the pointer is, `mouse` eases toward
-  // it every frame (that lag is what makes the light feel like it follows).
+  // Estado del puntero: `target` es dónde está el puntero, `mouse` se
+  // suaviza hacia él en cada frame (ese rezago es lo que hace que la luz
+  // se sienta como que sigue al cursor).
   var mouse = [0.7, 0.5];
   var target = [0.7, 0.5];
   var hover = 0;
@@ -171,20 +176,20 @@
     if (isVisible && !reducedMotion) {
       rafId = requestAnimationFrame(loop);
     } else {
-      // Clear the id so the IntersectionObserver callback knows it's safe
-      // to restart the loop next time the hero scrolls back into view.
+      // Limpia el id para que el callback del IntersectionObserver sepa que
+      // es seguro reiniciar el loop la próxima vez que el hero vuelva a verse.
       rafId = null;
     }
   }
 
-  // Cursor glow: mouse/pen only (on touch there's nothing to follow), and
-  // not with reduced motion.
+  // Resplandor del cursor: solo mouse/lápiz (en touch no hay nada que
+  // seguir), y no con movimiento reducido.
   if (!reducedMotion) {
     hero.addEventListener("pointermove", function (event) {
       if (event.pointerType === "touch") return;
       var box = canvas.getBoundingClientRect();
       target[0] = (event.clientX - box.left) / box.width;
-      target[1] = 1 - (event.clientY - box.top) / box.height; // GL y is up
+      target[1] = 1 - (event.clientY - box.top) / box.height; // en GL, y apunta hacia arriba
       hoverTarget = 1;
     });
     hero.addEventListener("pointerleave", function () {
@@ -192,7 +197,7 @@
     });
   }
 
-  // Pause the animation loop once the hero scrolls out of view.
+  // Pausa el loop de animación en cuanto el hero sale de la vista.
   if ("IntersectionObserver" in window) {
     var observer = new IntersectionObserver(function (entries) {
       isVisible = entries[0].isIntersecting;
@@ -206,7 +211,7 @@
   window.addEventListener("resize", resize);
 
   if (reducedMotion) {
-    render(0); // single static frame, no animation loop
+    render(0); // un solo frame estático, sin loop de animación
   } else {
     rafId = requestAnimationFrame(loop);
   }

@@ -1,13 +1,13 @@
-/* Layout for the content-management panel (gestion.html). Reuses tokens.css
-   (color/type) and components.css (.btn) — this file only covers the
-   admin-specific pieces: header, section cards, list rows, forms and the
-   JSON output box.
+/* Layout del panel de gestión de contenido (gestion.html). Reutiliza
+   tokens.css (color/tipografía) y components.css (.btn) — este archivo
+   solo cubre las piezas propias del panel de administración: header,
+   tarjetas de sección, filas de lista, formularios y la caja de salida JSON.
 
-   layout.css is also linked in (just for .theme-toggle), and it has a bare
-   `section { padding: var(--space-7) 0; }` rule meant for the home page's
-   sections. Neutralize it here so it doesn't add a 6rem gap under every
-   section on this page — .gestion-section/.gestion-output below set their
-   own spacing. */
+   layout.css también está enlazado (solo por .theme-toggle), y tiene una
+   regla simple `section { padding: var(--space-7) 0; }` pensada para las
+   secciones de la página principal. Se neutraliza aquí para que no agregue
+   un espacio de 6rem debajo de cada sección en esta página —
+   .gestion-section/.gestion-output de abajo definen su propio espaciado. */
 
 main.gestion-main section {
   padding: 0;
@@ -76,7 +76,7 @@ body {
   margin-bottom: var(--space-4);
 }
 
-/* --- Item list (existing entries) --- */
+/* --- Lista de elementos (entradas existentes) --- */
 .gestion-list {
   list-style: none;
   margin: 0 0 var(--space-4);
@@ -151,7 +151,7 @@ body {
   border-color: #ff6b6b;
 }
 
-/* --- Partners: plain chip list, no edit (just add/remove) --- */
+/* --- Aliados: lista simple de chips, sin edición (solo agregar/quitar) --- */
 .gestion-chip-row {
   display: flex;
   flex-wrap: wrap;
@@ -187,7 +187,7 @@ body {
   color: #ff6b6b;
 }
 
-/* --- Forms --- */
+/* --- Formularios --- */
 .gestion-form {
   display: grid;
   gap: var(--space-3);
@@ -249,7 +249,7 @@ body {
   min-height: 1.2em;
 }
 
-/* --- JSON output --- */
+/* --- Salida JSON --- */
 .gestion-output {
   margin-top: var(--space-7);
   padding-top: var(--space-5);

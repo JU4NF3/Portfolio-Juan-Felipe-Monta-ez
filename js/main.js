@@ -1,34 +1,38 @@
-/* Reads the portfolio content (services, projects, testimonials, partners)
-   from the #info-data <script type="application/json"> block in index.html
-   and renders each section from it.
+/* Lee el contenido del portafolio (servicios, proyectos, testimonios,
+   aliados) desde el bloque #info-data <script type="application/json"> en
+   index.html y renderiza cada sección a partir de él.
 
-   That data is read with JSON.parse(), not fetch(): fetching a separate
-   info.json file is blocked by the browser's CORS rules when the page is
-   opened directly via file:// (double-click on index.html), and double-click
-   is how this site needs to work. If you'd rather keep the data in an
-   actual standalone info.json file, that's doable too, but then the site
-   has to be served over http(s) (e.g. VS Code's "Live Server" extension) —
-   ask if you want to switch back to that.
+   Esos datos se leen con JSON.parse(), no con fetch(): obtener un archivo
+   info.json separado queda bloqueado por las reglas CORS del navegador
+   cuando la página se abre directamente vía file:// (doble clic sobre
+   index.html), y doble clic es como este sitio necesita funcionar. Si
+   prefieres mantener los datos en un archivo info.json independiente de
+   verdad, también es posible, pero entonces el sitio tiene que servirse
+   por http(s) (ej. la extensión "Live Server" de VS Code) — pregunta si
+   quieres volver a eso.
 
-   #info-data field reference (all of it is placeholder content — edit the
-   JSON in index.html directly, no JS changes needed):
-   - services[]:      label (short name shown in the list), icon (key into
-                       SERVICE_ICONS below), title + description (used for
-                       screen readers and a future /servicios page).
-   - projects[]:      title, category (short tag), summary, initials
-                       (2-letter fallback on the placeholder media blocks —
-                       remove once you swap in a real screenshot; see the
-                       TODO below where <img> should replace
-                       .media-placeholder).
+   Referencia de campos de #info-data (todo es contenido de ejemplo — edita
+   el JSON en index.html directamente, sin cambios de JS necesarios):
+   - services[]:      label (nombre corto que se ve en la lista), icon
+                       (clave dentro de SERVICE_ICONS más abajo), title +
+                       description (usados por lectores de pantalla y una
+                       futura página /servicios).
+   - projects[]:      title, category (etiqueta corta), summary, initials
+                       (respaldo de 2 letras en los bloques de media
+                       placeholder — quitar una vez se ponga una captura
+                       real; ver el TODO más abajo donde <img> debería
+                       reemplazar a .media-placeholder).
    - testimonials[]:  quote, name, role.
-   - partners[]:      array of plain strings (client/partner names).
+   - partners[]:      arreglo de strings simples (nombres de clientes/aliados).
 
-   Exposes window.PortfolioContentLoaded (a resolved promise — kept so
-   preloader.js's Promise.all(...) still works unchanged) and fires a
-   "portfolio:content-ready" event + sets window.PortfolioContentReady = true
-   once rendering is done, so animations.js only wires up ScrollTrigger
-   after the cards actually exist in the DOM (rendering here is synchronous,
-   but the flag/event keep this file order-independent from animations.js). */
+   Expone window.PortfolioContentLoaded (una promesa ya resuelta — se
+   mantiene así para que el Promise.all(...) de preloader.js siga
+   funcionando sin cambios) y dispara un evento "portfolio:content-ready" +
+   pone window.PortfolioContentReady = true una vez que termina el
+   renderizado, para que animations.js solo conecte ScrollTrigger después
+   de que las tarjetas ya existan en el DOM (el renderizado aquí es
+   síncrono, pero la bandera/evento mantienen este archivo independiente
+   del orden respecto a animations.js). */
 
 (function () {
   function el(tag, className, html) {
@@ -39,7 +43,7 @@
   }
 
   // --- Services ---
-  // Inline SVG icons (currentColor, so they follow the row's hover color).
+  // Íconos SVG inline (currentColor, para que sigan el color de hover de la fila).
   var SERVICE_ICONS = {
     burst:
       '<circle cx="24" cy="24" r="7"/>' +
@@ -61,12 +65,12 @@
     if (!servicesList || !services) return;
     services.forEach(function (service) {
       var row = el("a", "service-row");
-      row.href = "#"; // TODO: link to /servicios#[service] once that page exists.
+      row.href = "#"; // TODO: enlazar a /servicios#[service] cuando esa página exista.
       row.innerHTML =
         '<svg class="service-row__icon" data-service-icon viewBox="0 0 48 48" fill="currentColor" aria-hidden="true">' +
         (SERVICE_ICONS[service.icon] || SERVICE_ICONS.sparkle) +
         "</svg>" +
-        // The title is rendered twice: the copy sits below and rolls up on hover.
+        // El título se renderiza dos veces: la copia va debajo y sube rotando en hover.
         '<span class="service-row__title" aria-hidden="true">' +
         '<span class="service-row__roll">' + service.label +
         '<span class="service-row__roll-dup">' + service.label + "</span>" +
@@ -76,15 +80,16 @@
     });
   }
 
-  // --- Works (projects) ---
-  // One row per project: tag + title + "Ver proyecto" link, then a large
-  // main image and a smaller side image. Each .work-media gets the
-  // clip-path reveal from animations.js and the hover zoom from CSS.
+  // --- Works (proyectos) ---
+  // Una fila por proyecto: etiqueta + título + enlace "Ver proyecto", luego
+  // una imagen principal grande y una imagen lateral más pequeña. Cada
+  // .work-media recibe el reveal con clip-path de animations.js y el zoom
+  // en hover desde CSS.
   function renderWorks(projects) {
     var worksGrid = document.querySelector("[data-works-grid]");
     if (!worksGrid || !projects) return;
     projects.forEach(function (project) {
-      var href = "#"; // TODO: link to /work/[case] once case pages exist.
+      var href = "#"; // TODO: enlazar a /work/[case] cuando existan las páginas de casos.
       var row = el("article", "work-row");
       row.innerHTML =
         '<div class="work-row__head">' +
@@ -94,15 +99,15 @@
         "</div>" +
         '<p class="work-row__summary">' + project.summary + "</p>" +
         '<div class="work-row__media">' +
-        // Main image: the accessible link for the case study.
+        // Imagen principal: el enlace accesible hacia el caso de estudio.
         '<a class="work-media work-media--main" href="' + href + '" aria-label="' +
         project.title + ' — ver caso de estudio">' +
         '<div class="work-media__inner">' +
-        // TODO: swap the placeholder for a real <img> screenshot.
+        // TODO: reemplazar el placeholder por una captura <img> real.
         '<div class="media-placeholder" role="img" aria-label="Marcador de imagen del proyecto — ' +
         project.title + '">' + project.initials + "</div>" +
         "</div></a>" +
-        // Side image: duplicate link, hidden from assistive tech and tab order.
+        // Imagen lateral: enlace duplicado, oculto para tecnología de asistencia y del orden de tabulación.
         '<a class="work-media work-media--side" href="' + href + '" aria-hidden="true" tabindex="-1">' +
         '<div class="work-media__inner">' +
         '<div class="media-placeholder media-placeholder--alt">' + project.initials + "</div>" +
@@ -113,9 +118,10 @@
   }
 
   // --- Testimonials ---
-  // Each card sits in a .testimonial-orbit wrapper: on desktop that wrapper
-  // becomes a huge square whose rotation swings the card along a wide arc
-  // (animations.js). Without JS it's just a plain block.
+  // Cada tarjeta va dentro de un wrapper .testimonial-orbit: en escritorio
+  // ese wrapper se convierte en un cuadrado enorme cuya rotación balancea
+  // la tarjeta a lo largo de un arco amplio (animations.js). Sin JS es solo
+  // un bloque simple.
   function renderTestimonials(testimonials) {
     var testimonialsGrid = document.querySelector("[data-testimonials-grid]");
     if (!testimonialsGrid || !testimonials) return;
@@ -132,7 +138,7 @@
     });
   }
 
-  // --- Partners (inside the closing footer, a <ul>) ---
+  // --- Partners (dentro del footer de cierre, un <ul>) ---
   function renderPartners(partners) {
     var partnerRow = document.querySelector("[data-partners-row]");
     if (!partnerRow || !partners) return;
@@ -167,26 +173,27 @@
   renderTestimonials(data.testimonials);
   renderPartners(data.partners);
 
-  // Already finished by the time this line runs (no network round-trip) —
-  // kept as a resolved promise so preloader.js's Promise.all(...) still
-  // works unchanged.
+  // Ya terminado para cuando esta línea se ejecuta (sin ida y vuelta de
+  // red) — se mantiene como una promesa resuelta para que el
+  // Promise.all(...) de preloader.js siga funcionando sin cambios.
   window.PortfolioContentLoaded = Promise.resolve();
   markReady();
 })();
 
-/* About chips: infinite marquee with no empty gaps.
-   The loop moves the track by -50%, which is only seamless if half the
-   track is at least as wide as the visible area. So: measure one set,
-   clone it until half the track covers the container, then double that.
-   Rebuilt when the container width changes. Hovering ramps the speed down
-   to 25% (Web Animations playbackRate, so the position doesn't jump). */
+/* Chips de About: marquesina infinita sin espacios vacíos.
+   El loop mueve la pista -50%, lo cual solo es perfecto si la mitad de la
+   pista es al menos tan ancha como el área visible. Entonces: se mide un
+   conjunto, se clona hasta que la mitad de la pista cubra el contenedor, y
+   luego se duplica eso. Se reconstruye cuando cambia el ancho del
+   contenedor. El hover baja la velocidad al 25% (playbackRate de Web
+   Animations, para que la posición no salte). */
 (function () {
   var marquee = document.querySelector("[data-chip-marquee]");
   if (!marquee) return;
   var list = marquee.querySelector(".chip-list");
   var originals = Array.prototype.slice.call(list.children);
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-  var SPEED = 45; // px per second
+  var SPEED = 45; // px por segundo
   var lastWidth = 0;
 
   function build() {
@@ -198,9 +205,9 @@
       clone.remove();
     });
     marquee.classList.remove("chip-marquee--ready");
-    if (reduceMotion.matches) return; // leave the chips wrapping, static
+    if (reduceMotion.matches) return; // deja los chips haciendo wrap, estáticos
 
-    // One set's width, margins included (the list is max-content wide).
+    // El ancho de un conjunto, márgenes incluidos (la lista mide max-content de ancho).
     list.style.width = "max-content";
     list.style.flexWrap = "nowrap";
     var setWidth = list.scrollWidth;
@@ -222,7 +229,7 @@
     marquee.classList.add("chip-marquee--ready");
   }
 
-  // Smoothly ramp the CSS animation's playbackRate toward a target.
+  // Ajusta suavemente el playbackRate de la animación CSS hacia un objetivo.
   var rampFrame = null;
   function rampSpeed(target) {
     var animation = list.getAnimations ? list.getAnimations()[0] : null;
@@ -250,7 +257,7 @@
   } else {
     window.addEventListener("resize", build);
   }
-  // Chip widths change once the web font loads; re-measure then.
+  // El ancho de los chips cambia cuando carga la web font; volver a medir entonces.
   if (document.fonts && document.fonts.ready) {
     document.fonts.ready.then(function () {
       lastWidth = 0;

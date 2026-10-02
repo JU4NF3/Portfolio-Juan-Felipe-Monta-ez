@@ -1,9 +1,9 @@
-/* GSAP ScrollTrigger + SplitText animations, one per section.
-   Every animated element starts fully visible in plain CSS — gsap.from()
-   is what applies the opacity:0 starting state, only inside the "noReduce"
-   branch below. So if GSAP fails to load from the CDN (offline, blocked,
-   etc.) or the visitor prefers reduced motion, the page stays fully
-   readable with no animation wiring at all. */
+/* Animaciones de GSAP ScrollTrigger + SplitText, una por sección.
+   Cada elemento animado empieza totalmente visible en CSS puro — gsap.from()
+   es lo que aplica el estado inicial opacity:0, solo dentro de la rama
+   "noReduce" de abajo. Así, si GSAP falla al cargar desde el CDN (sin
+   conexión, bloqueado, etc.) o el visitante prefiere movimiento reducido,
+   la página se mantiene totalmente legible sin ninguna animación conectada. */
 
 window.PortfolioAnimations = (function () {
   var hasGsap = typeof gsap !== "undefined";
@@ -12,11 +12,11 @@ window.PortfolioAnimations = (function () {
   if (hasGsap) {
     gsap.registerPlugin(ScrollTrigger, SplitText);
 
-    // base.css sets `scroll-behavior: smooth` on <html>. ScrollTrigger.refresh()
-    // jumps the scroll position to measure every trigger; with smooth scroll
-    // those jumps get animated and the measurements come out wrong (the
-    // statement pin started at a negative offset after a resize). Turn it
-    // off just for the duration of each refresh.
+    // base.css pone `scroll-behavior: smooth` en <html>. ScrollTrigger.refresh()
+    // salta la posición de scroll para medir cada trigger; con smooth scroll
+    // esos saltos se animan y las mediciones salen mal (el pin de statement
+    // empezaba con un offset negativo tras un resize). Se desactiva solo
+    // durante la duración de cada refresh.
     var rootStyle = document.documentElement.style;
     ScrollTrigger.addEventListener("refreshInit", function () {
       rootStyle.scrollBehavior = "auto";
@@ -33,9 +33,9 @@ window.PortfolioAnimations = (function () {
     var tl = gsap.timeline({ paused: true });
 
     if (heroTitle) {
-      // Word-level split (not chars): char-by-char splitting breaks up the
-      // shape of words and reads as "broken" text on desktop. Animating
-      // whole words in stays clean and still reveals nicely.
+      // División a nivel de palabra (no de caracteres): dividir carácter por
+      // carácter rompe la forma de las palabras y se lee como texto "roto"
+      // en escritorio. Animar palabras completas se ve limpio y revela bien igual.
       var split = new SplitText(heroTitle, { type: "words" });
       tl.from(split.words, {
         opacity: 0,
@@ -57,10 +57,11 @@ window.PortfolioAnimations = (function () {
     return tl;
   }
 
-  // Testimonials: desktop = cards swing into a fan on a wide orbit, plus a
-  // momentum "push" when the mouse sweeps over a card. Mobile = fade-up.
-  // Own matchMedia so it can switch layouts on resize; reverted from the
-  // reduced-motion cleanup below.
+  // Testimonials: escritorio = las tarjetas se balancean hacia un abanico
+  // sobre una órbita amplia, más un "empujón" con momentum cuando el mouse
+  // pasa sobre una tarjeta. Móvil = fade-up. Tiene su propio matchMedia para
+  // poder cambiar de layout al redimensionar; se revierte desde la limpieza
+  // de movimiento reducido de más abajo.
   var testimonialsMedia = null;
 
   function buildTestimonialFan() {
@@ -80,10 +81,11 @@ window.PortfolioAnimations = (function () {
       isDesktop: "(min-width: 992px)",
       isMobile: "(max-width: 991px)",
     }, function (context) {
-      // Start each breakpoint from a clean slate. Relying on matchMedia's
-      // revert wasn't enough: crossing from desktop to mobile, the mobile
-      // fade-up captured the fan's leftover x/rotation as its end state and
-      // left cards shifted off-screen (horizontal scroll on mobile).
+      // Cada breakpoint arranca desde cero. Confiar solo en el revert de
+      // matchMedia no bastaba: al pasar de escritorio a móvil, el fade-up
+      // móvil capturaba el x/rotation sobrante del abanico como su estado
+      // final y dejaba las tarjetas desplazadas fuera de pantalla (scroll
+      // horizontal en móvil).
       gsap.killTweensOf(orbits);
       gsap.killTweensOf(cards);
       gsap.set(orbits, { clearProps: "transform,opacity" });
@@ -109,16 +111,17 @@ window.PortfolioAnimations = (function () {
 
       fan.classList.add("testimonial-fan--orbit");
 
-      // Resting fan: middle card straight, the others spread out, tilted
-      // and dropped a little more the further they are from the middle.
+      // Abanico en reposo: la tarjeta del medio recta, las demás se
+      // despliegan, inclinadas y bajadas un poco más mientras más lejos
+      // están del centro.
       var middle = (orbits.length - 1) / 2;
       orbits.forEach(function (orbit, index) {
         var offset = index - middle;
         gsap.set(orbit, { x: 300 * offset, y: 45 * offset * offset, rotation: 5 * offset });
       });
 
-      // Entry: every orbit starts rotated 40deg (card off-screen right)
-      // and springs back into the fan.
+      // Entrada: cada órbita empieza rotada 40 grados (tarjeta fuera de
+      // pantalla a la derecha) y rebota de vuelta hacia el abanico.
       var swingIn = gsap.from(orbits, {
         rotation: 40,
         duration: 1.5,
@@ -131,8 +134,9 @@ window.PortfolioAnimations = (function () {
         },
       });
 
-      // Reset once the section is fully below the viewport again, so the
-      // entry replays next time it's scrolled into view.
+      // Se reinicia una vez que la sección vuelve a quedar totalmente
+      // debajo del viewport, para que la entrada se repita la próxima vez
+      // que se haga scroll hasta ella.
       ScrollTrigger.create({
         trigger: fan,
         start: "top bottom",
@@ -146,7 +150,7 @@ window.PortfolioAnimations = (function () {
         fan.classList.remove("testimonial-fan--orbit");
       };
 
-      // Track mouse velocity (px per frame) over the fan.
+      // Rastrea la velocidad del mouse (px por frame) sobre el abanico.
       var lastX = 0;
       var lastY = 0;
       var velocityX = 0;
@@ -166,9 +170,9 @@ window.PortfolioAnimations = (function () {
         });
       }
 
-      // On enter, push the card with the mouse's momentum. The spin comes
-      // from torque: where the card was hit (offset from its center)
-      // crossed with the direction the mouse was moving.
+      // Al entrar, empuja la tarjeta con el momentum del mouse. El giro
+      // viene de la torsión: dónde se golpeó la tarjeta (offset desde su
+      // centro) cruzado con la dirección en la que se movía el mouse.
       function pushCard(event) {
         var card = event.currentTarget;
         var box = card.getBoundingClientRect();
@@ -202,9 +206,9 @@ window.PortfolioAnimations = (function () {
     });
   }
 
-  // Closing footer: clone the content into an accent-colored layer that is
-  // only visible inside a circle following the mouse ("flashlight").
-  // Mouse only — on touch there's no cursor to follow, so no clone at all.
+  // Footer de cierre: clona el contenido en una capa de color de acento que
+  // solo es visible dentro de un círculo que sigue al mouse ("linterna").
+  // Solo mouse — en touch no hay cursor que seguir, así que no se clona nada.
   var closingSpot = null;
   var closingRoot = null;
   var closingHandlers = null;
@@ -218,7 +222,7 @@ window.PortfolioAnimations = (function () {
     closingSpot = layer.cloneNode(true);
     closingSpot.classList.add("closing__layer--spot");
     closingSpot.removeAttribute("data-closing-layer");
-    // Decorative duplicate: hidden from screen readers, not focusable.
+    // Duplicado decorativo: oculto para lectores de pantalla, no enfocable.
     closingSpot.setAttribute("aria-hidden", "true");
     closingSpot.setAttribute("inert", "");
     closingSpot.querySelectorAll("[id], [data-partners-row]").forEach(function (node) {
@@ -236,7 +240,7 @@ window.PortfolioAnimations = (function () {
         moveX(gsap.utils.mapRange(box.left, box.right, 0, 100, event.clientX));
         moveY(gsap.utils.mapRange(box.top, box.bottom, 0, 100, event.clientY));
       },
-      // Circle grows in on enter and shrinks away on leave.
+      // El círculo crece al entrar y se encoge al salir.
       enter: function (event) {
         var box = closingRoot.getBoundingClientRect();
         gsap.set(closingSpot, {
@@ -265,8 +269,9 @@ window.PortfolioAnimations = (function () {
   }
 
   function buildScrollReveals() {
-    // Word-by-word "light up" scrubbed to scroll position: every word starts
-    // dim and brightens in reading order as the text scrolls up.
+    // "Iluminado" palabra por palabra ligado a la posición del scroll: cada
+    // palabra empieza tenue y se ilumina en orden de lectura mientras el
+    // texto sube.
     function scrubWords(text, start, end) {
       var split = new SplitText(text, { type: "words" });
       gsap.set(split.words, { opacity: 0.25 });
@@ -278,16 +283,17 @@ window.PortfolioAnimations = (function () {
       });
     }
 
-    // About paragraph.
+    // Párrafo de About.
     var aboutText = document.querySelector("[data-split-about]");
     if (aboutText) scrubWords(aboutText, "top 80%", "bottom 40%");
 
-    // CTA-to-works heading: short (two lines), so a shorter scroll window.
+    // Encabezado del CTA hacia works: corto (dos líneas), así que una
+    // ventana de scroll más corta.
     var ctaText = document.querySelector("[data-split-cta]");
     if (ctaText) scrubWords(ctaText, "top 85%", "bottom 50%");
 
-    // Generic stagger-in for any section marked with [data-reveal-group]:
-    // each direct child animates in once, on first entry.
+    // Entrada escalonada genérica para cualquier sección marcada con
+    // [data-reveal-group]: cada hijo directo se anima una vez, al entrar por primera vez.
     document.querySelectorAll("[data-reveal-group]").forEach(function (group) {
       var items = group.children;
       gsap.from(items, {
@@ -304,8 +310,8 @@ window.PortfolioAnimations = (function () {
       });
     });
 
-    // Services: icons spin while the list scrolls through the viewport.
-    // Alternating direction and slightly different speeds per row.
+    // Services: los íconos giran mientras la lista atraviesa el viewport.
+    // Dirección alternada y velocidades ligeramente distintas por fila.
     var serviceIcons = document.querySelectorAll("[data-service-icon]");
     if (serviceIcons.length) {
       serviceIcons.forEach(function (icon, index) {
@@ -323,16 +329,18 @@ window.PortfolioAnimations = (function () {
       });
     }
 
-    // Statement: pin the stage for the track's 300vh and slide the sentence
-    // along the curve from off-screen right to off-screen left.
+    // Statement: fija el escenario durante los 300vh de la pista y desliza
+    // la frase a lo largo de la curva, de fuera de pantalla a la derecha a
+    // fuera de pantalla a la izquierda.
     var statement = document.querySelector("[data-statement]");
     var statementText = statement && statement.querySelector("[data-statement-text]");
     if (statementText) {
       var curve = statement.querySelector("#statement-path");
-      var viewBoxWidth = 1516; // keep in sync with the SVG viewBox
+      var viewBoxWidth = 1516; // mantener sincronizado con el viewBox del SVG
 
-      // Distance along the path where it crosses a given x (paths are
-      // left-to-right, so x grows with length; sampling is plenty precise).
+      // Distancia a lo largo del trazo donde cruza una x dada (los trazos
+      // van de izquierda a derecha, así que x crece con la longitud; el
+      // muestreo es suficientemente preciso).
       var lengthAtX = function (x) {
         var total = curve.getTotalLength();
         for (var len = 0; len <= total; len += 4) {
@@ -343,8 +351,9 @@ window.PortfolioAnimations = (function () {
 
       statement.classList.add("statement--animated");
 
-      // Function-based values + invalidateOnRefresh: re-measured on resize,
-      // since the text length changes with the mobile font size.
+      // Valores basados en función + invalidateOnRefresh: se vuelven a medir
+      // al redimensionar, ya que la longitud del texto cambia con el tamaño
+      // de fuente móvil.
       gsap.fromTo(
         statementText,
         { attr: { startOffset: function () { return lengthAtX(viewBoxWidth) + 40; } } },
@@ -360,17 +369,18 @@ window.PortfolioAnimations = (function () {
             start: "top top",
             end: "bottom bottom",
             pin: statement.querySelector(".statement__stage"),
-            pinSpacing: false, // the 300vh track already provides the scroll room
+            pinSpacing: false, // la pista de 300vh ya aporta el espacio de scroll
             scrub: true,
             invalidateOnRefresh: true,
-            // Created after the [data-reveal-group] triggers further down the
-            // page; refresh this pin first so their positions account for it.
+            // Se crea después de los triggers de [data-reveal-group] más
+            // abajo en la página; refrescar este pin primero para que sus
+            // posiciones lo tengan en cuenta.
             refreshPriority: 1,
           },
         }
       );
 
-      // The text is measured in the web font; re-measure once it has loaded.
+      // El texto se mide con la web font; volver a medir una vez que haya cargado.
       if (document.fonts && document.fonts.ready) {
         document.fonts.ready.then(function () {
           ScrollTrigger.refresh();
@@ -381,9 +391,10 @@ window.PortfolioAnimations = (function () {
     buildTestimonialFan();
     buildClosingSpotlight();
 
-    // Works: clip-path wipe + image settle, driven by CSS transitions.
-    // Adding .works-list--reveal arms the hidden state (so without JS the
-    // media stay visible); each media then gets .is-in-view once on entry.
+    // Works: barrido con clip-path + asentamiento de imagen, manejado por
+    // transiciones CSS. Agregar .works-list--reveal arma el estado oculto
+    // (así sin JS el media se mantiene visible); cada media recibe luego
+    // .is-in-view una vez al entrar.
     var worksList = document.querySelector("[data-works-grid]");
     if (worksList) {
       worksList.classList.add("works-list--reveal");
@@ -408,25 +419,26 @@ window.PortfolioAnimations = (function () {
       },
       function (context) {
         if (context.conditions.reduce) {
-          // Everything is already visible via CSS defaults; nothing to wire up.
+          // Todo ya es visible por los valores por defecto de CSS; nada que conectar.
           heroIntroTimeline = null;
           return;
         }
         heroIntroTimeline = buildHeroIntro();
 
-        // buildScrollReveals() reads the rendered cards (services, works,
-        // testimonials, partners), which main.js fills in from #info-data.
-        // That happens synchronously today, but wait on the ready
-        // flag/event anyway so this stays correct if main.js's data source
-        // ever goes back to something async (a fetched info.json, etc.).
+        // buildScrollReveals() lee las tarjetas ya renderizadas (services,
+        // works, testimonials, partners), que main.js llena desde
+        // #info-data. Eso ocurre de forma síncrona hoy, pero se espera la
+        // bandera/evento de todos modos para que esto siga siendo correcto
+        // si la fuente de datos de main.js vuelve a ser algo asíncrono (un
+        // info.json obtenido por red, etc.).
         if (window.PortfolioContentReady) {
           buildScrollReveals();
         } else {
           window.addEventListener("portfolio:content-ready", buildScrollReveals, { once: true });
         }
 
-        // If the visitor switches to reduced motion mid-session, drop the
-        // armed state so the works media aren't left hidden.
+        // Si el visitante cambia a movimiento reducido a mitad de sesión,
+        // se quita el estado armado para que el media de works no quede oculto.
         return function () {
           window.removeEventListener("portfolio:content-ready", buildScrollReveals);
           var worksList = document.querySelector("[data-works-grid]");

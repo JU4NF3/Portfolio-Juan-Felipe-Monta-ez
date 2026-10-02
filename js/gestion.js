@@ -1,21 +1,22 @@
-/* Content-management panel for gestion.html.
+/* Panel de gestión de contenido para gestion.html.
 
-   There's no backend, so this can't write index.html by itself. What it
-   does instead:
-   - Keeps the data (services, projects, testimonials, partners) in memory
-     and mirrors it to localStorage on every change, so nothing is lost on
-     reload.
-   - Renders a live JSON preview at the bottom, in the exact shape that goes
-     inside index.html's <script id="info-data"> block.
-   - Lets you copy that JSON (clipboard, with a manual-select fallback) to
-     paste into index.html by hand.
-   - Lets you import an existing JSON blob (e.g. if index.html was edited
-     directly and this panel's copy went stale).
+   No hay backend, así que esto no puede escribir index.html por sí solo.
+   Lo que sí hace en su lugar:
+   - Mantiene los datos (servicios, proyectos, testimonios, aliados) en
+     memoria y los refleja en localStorage en cada cambio, para que no se
+     pierda nada al recargar.
+   - Renderiza una vista previa en vivo del JSON al final, con la forma
+     exacta que va dentro del bloque <script id="info-data"> de index.html.
+   - Permite copiar ese JSON (portapapeles, con un respaldo de selección
+     manual) para pegarlo en index.html a mano.
+   - Permite importar un bloque JSON existente (por ejemplo, si index.html
+     se editó directamente y la copia de este panel quedó desactualizada).
 
-   DEFAULT_DATA below is a snapshot of index.html's #info-data at the time
-   this file was written — "Restaurar valores actuales del sitio" resets to
-   it. If you edit index.html's JSON by hand afterwards, use the "Importar"
-   box instead of the reset button so you don't lose that edit. */
+   DEFAULT_DATA más abajo es una foto del #info-data de index.html al
+   momento de escribir este archivo — "Restaurar valores actuales del
+   sitio" restablece a eso. Si después editas el JSON de index.html a mano,
+   usa el cuadro de "Importar" en vez del botón de reset para no perder esa
+   edición. */
 
 (function () {
   var STORAGE_KEY = "portfolio-gestion-data";
@@ -113,7 +114,7 @@
       var raw = localStorage.getItem(STORAGE_KEY);
       if (raw) return JSON.parse(raw);
     } catch (e) {
-      /* corrupt/unavailable storage — fall through to defaults */
+      /* almacenamiento corrupto/no disponible — se usan los valores por defecto */
     }
     return clone(DEFAULT_DATA);
   }
@@ -124,12 +125,12 @@
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     } catch (e) {
-      /* storage full/unavailable — the page still works, just won't persist */
+      /* almacenamiento lleno/no disponible — la página sigue funcionando, solo no persistirá */
     }
     renderOutput();
   }
 
-  // --- Generic list rendering (services / projects / testimonials) ---
+  // --- Renderizado genérico de listas (services / projects / testimonials) ---
   var LIST_CONFIG = {
     services: {
       titleField: "label",
@@ -249,7 +250,7 @@
     }
   }
 
-  // --- Partners: plain string chips ---
+  // --- Partners: chips de texto simple ---
   function renderPartners() {
     var row = document.querySelector("[data-partners-chips]");
     if (!row) return;
@@ -292,7 +293,7 @@
     });
   }
 
-  // --- JSON output ---
+  // --- Salida JSON ---
   function renderOutput() {
     var output = document.querySelector("[data-output]");
     if (output) output.value = JSON.stringify(state, null, 2);
@@ -315,7 +316,7 @@
 
         if (navigator.clipboard && navigator.clipboard.writeText) {
           navigator.clipboard.writeText(text).then(showCopied, function () {
-            // Fall back below if the permission/API fails for any reason.
+            // Usa el respaldo de abajo si el permiso/API falla por cualquier motivo.
             fallbackCopy(output, showCopied, status);
           });
         } else {
@@ -349,7 +350,7 @@
         return;
       }
     } catch (e) {
-      /* execCommand unsupported/blocked — fall through to manual instructions */
+      /* execCommand no soportado/bloqueado — se pasa a las instrucciones manuales */
     }
     textarea.focus();
     textarea.select();

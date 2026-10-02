@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
 
-  <!-- Anti-flash: apply the saved theme before first paint, so there's no
-       flash of the wrong theme while tokens.css loads. -->
+  <!-- Anti-flash: aplica el tema guardado antes del primer renderizado, para
+       que no haya un parpadeo del tema incorrecto mientras carga tokens.css. -->
   <script>
     (function () {
       try {
@@ -12,7 +12,7 @@
           document.documentElement.setAttribute("data-theme", "light");
         }
       } catch (e) {
-        /* localStorage unavailable — falls back to the default dark theme. */
+        /* localStorage no disponible — usa el tema oscuro por defecto. */
       }
     })();
   </script>
@@ -41,7 +41,7 @@
 <body>
   <a class="skip-link" href="#main">Saltar al contenido</a>
 
-  <!-- Preloader: % counter driven by js/preloader.js. -->
+  <!-- Preloader: contador de % manejado por js/preloader.js. -->
   <div class="preloader" data-preloader>
     <span class="preloader__label">Cargando</span>
     <span
@@ -57,9 +57,10 @@
     >
   </div>
 
-  <!-- 6-panel transition overlay. Starts covering the screen (no [data-state]
-       yet) so content is never visible before preloader.js calls
-       PortfolioTransition.revealOnEntry(). See js/page-transition.js. -->
+  <!-- Overlay de transición de 6 paneles. Empieza cubriendo toda la pantalla
+       (sin [data-state] todavía) para que el contenido nunca se vea antes de
+       que preloader.js llame a PortfolioTransition.revealOnEntry().
+       Ver js/page-transition.js. -->
   <div class="panel-transition" data-panel-transition aria-hidden="true">
     <div class="panel-transition__panel"></div>
     <div class="panel-transition__panel"></div>
@@ -70,9 +71,10 @@
   </div>
 
   <header class="site-header">
-    <!-- Self-link: re-triggers the full page-transition + preloader cycle via
-         a real reload. TODO: once /work, /about, etc. exist, point other
-         internal links here too and add [data-page-transition] to them. -->
+    <!-- Enlace a sí mismo: vuelve a disparar el ciclo completo de
+         page-transition + preloader mediante una recarga real. TODO: cuando
+         existan /work, /about, etc., apuntar también los demás enlaces
+         internos aquí y agregarles [data-page-transition]. -->
     <a class="logomark" href="index.html" data-page-transition>
       <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
         <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" />
@@ -81,10 +83,11 @@
       Juanfe
     </a>
 
-    <!-- Desktop: fixed pill nav, bottom-center. -->
+    <!-- Escritorio: nav tipo "pill" fija, centrada abajo. -->
     <nav class="nav-pill" aria-label="Principal" data-nav-pill>
-      <!-- Glass highlight that slides to the active section's link
-           (js/nav.js). Purely visual; aria-current marks the active link. -->
+      <!-- Resaltado tipo "glass" que se desliza hasta el enlace de la sección
+           activa (js/nav.js). Es puramente visual; aria-current marca el
+           enlace activo. -->
       <span class="nav-pill__indicator" data-nav-indicator aria-hidden="true"></span>
       <a class="nav-pill__link" href="#about">Sobre mí</a>
       <a class="nav-pill__link" href="#services">Servicios</a>
@@ -110,11 +113,11 @@
         </svg>
         <span class="sr-only">Cambiar entre tema claro y oscuro</span>
       </button>
-      <!-- TODO: replace with the real Cal.com booking link. -->
+      <!-- TODO: reemplazar con el enlace real de reservas de Cal.com. -->
       <a class="nav-pill__cta" href="#">Agendar una llamada</a>
     </nav>
 
-    <!-- Mobile: single "Open menu" button, replaces the pill nav. -->
+    <!-- Móvil: un solo botón "Abrir menú" que reemplaza la nav tipo "pill". -->
     <button
       class="nav-toggle"
       type="button"
@@ -163,14 +166,14 @@
           </svg>
           <span class="sr-only">Cambiar entre tema claro y oscuro</span>
         </button>
-        <!-- TODO: replace with the real Cal.com booking link. -->
+        <!-- TODO: reemplazar con el enlace real de reservas de Cal.com. -->
         <a class="btn btn-primary" href="#">Agendar una llamada</a>
       </div>
     </div>
   </header>
 
   <main id="main">
-    <!-- 1. Hero -->
+    <!-- 1. Hero (sección principal) -->
     <section id="hero" class="hero">
       <canvas class="hero__canvas" data-hero-canvas aria-hidden="true"></canvas>
       <div class="container hero__content">
@@ -182,14 +185,14 @@
           todo lo relacionado con el modelado 3D.
         </p>
         <div class="hero__actions">
-          <!-- TODO: replace with the real Cal.com booking link. -->
+          <!-- TODO: reemplazar con el enlace real de reservas de Cal.com. -->
           <a class="btn btn-primary" href="#" data-hero-fade>Agendar una llamada</a>
           <a class="btn btn-ghost" href="#works" data-hero-fade>Ver mi trabajo</a>
         </div>
       </div>
     </section>
 
-    <!-- 2. About -->
+    <!-- 2. About (sobre mí) -->
     <section id="about" class="about">
       <div class="container">
         <span class="section-eyebrow">Sobre mí</span>
@@ -200,8 +203,9 @@
           experimentos en WebGL hasta modelado 3D — y junto las tres cosas para que un
           producto se sienta pensado, no solo armado.
         </p>
-        <!-- One set only: js/main.js clones it as many times as needed to
-             fill the width (clones are aria-hidden) and starts the loop. -->
+        <!-- Solo un conjunto: js/main.js lo clona tantas veces como haga
+             falta para llenar el ancho (los clones llevan aria-hidden) y
+             arranca el loop. -->
         <div class="chip-marquee" data-chip-marquee>
           <ul class="chip-list" aria-label="Áreas de enfoque">
             <li>Diseño UI/UX</li>
@@ -214,7 +218,7 @@
       </div>
     </section>
 
-    <!-- 3. Services -->
+    <!-- 3. Services (servicios) -->
     <section id="services" class="services">
       <div class="container">
         <div class="services-head">
@@ -223,11 +227,11 @@
             Diseño, movimiento y código bajo un mismo criterio: llevo tu producto de la primera
             idea a algo que la gente quiera usar.
           </p>
-          <!-- TODO: point to /servicios once that page exists. -->
+          <!-- TODO: apuntar a /servicios cuando esa página exista. -->
           <a class="services-head__btn" href="#">Ver servicios</a>
         </div>
-        <!-- Big rows with icon + rolling title; icons rotate on scroll
-             (see .service-row in components.css + animations.js). -->
+        <!-- Filas grandes con ícono + título rotativo; los íconos giran al
+             hacer scroll (ver .service-row en components.css + animations.js). -->
         <div class="services-list" data-services-grid></div>
         <div class="who-i-build-for">
           <h3>Para quién trabajo</h3>
@@ -236,9 +240,9 @@
       </div>
     </section>
 
-    <!-- 3b. Statement: sentence that travels along a curve while the section
-         is pinned (see .statement in components.css + animations.js).
-         Without JS / with reduced motion only the plain <h2> shows. -->
+    <!-- 3b. Statement: frase que recorre una curva mientras la sección queda
+         fija ("pinned") (ver .statement en components.css + animations.js).
+         Sin JS / con movimiento reducido solo se muestra el <h2> plano. -->
     <section id="statement" class="statement" data-statement>
       <div class="statement__track">
         <div class="statement__stage">
@@ -253,49 +257,52 @@
       </div>
     </section>
 
-    <!-- 4. Works -->
+    <!-- 4. Works (trabajo) -->
     <section id="works" class="works">
       <div class="container">
         <div class="section-head">
           <span class="section-eyebrow">Trabajo Seleccionado</span>
           <h2>Algunos proyectos recientes</h2>
         </div>
-        <!-- Not [data-reveal-group]: works has its own clip-path reveal
-             (see .work-media in components.css + animations.js). -->
+        <!-- No usa [data-reveal-group]: works tiene su propio reveal con
+             clip-path (ver .work-media en components.css + animations.js). -->
         <div class="works-list" data-works-grid></div>
       </div>
     </section>
 
-    <!-- 5. CTA to works -->
+    <!-- 5. CTA hacia works -->
     <section id="works-cta" class="works-cta">
       <div class="container">
         <div class="works-cta__inner">
-          <!-- Words light up one by one with scroll (animations.js). -->
+          <!-- Las palabras se iluminan una por una con el scroll (animations.js). -->
           <h2 data-split-cta>¿Quieres ver cómo se juntan estas piezas?</h2>
-          <!-- TODO: /work doesn't exist yet — this links to a future page.
-               Once it's built, add [data-page-transition] here too. -->
+          <!-- TODO: /work todavía no existe — esto enlaza a una página futura.
+               Cuando se construya, agregar también [data-page-transition] aquí. -->
           <a class="btn btn-primary" href="work.html">Ver todo el trabajo</a>
         </div>
       </div>
     </section>
 
-    <!-- 6. Testimonials -->
+    <!-- 6. Testimonials (testimonios) -->
     <section id="testimonials" class="testimonials">
       <div class="container">
-        <!-- No visible heading here on purpose — the eyebrow/title were
-             competing with the fan/orbit animation. Kept as sr-only so the
-             section still has an accessible name for screen readers. -->
+        <!-- Sin encabezado visible aquí a propósito — el eyebrow/título
+             competían con la animación de abanico/órbita. Se deja como
+             sr-only para que la sección siga teniendo un nombre accesible
+             para lectores de pantalla. -->
         <h2 class="sr-only">Testimonios</h2>
-        <!-- Not [data-reveal-group]: cards fan in on a big orbit + inertia
-             hover (see .testimonial-fan in components.css + animations.js). -->
+        <!-- No usa [data-reveal-group]: las tarjetas se despliegan en abanico
+             sobre una órbita grande + hover con inercia (ver .testimonial-fan
+             en components.css + animations.js). -->
         <div class="testimonial-fan" data-testimonials-grid></div>
       </div>
     </section>
   </main>
 
-  <!-- 7. Closing: partners + footer in one block. With a mouse, an accent
-       copy of everything shows through a circle that follows the cursor
-       (the copy is cloned from .closing__layer by animations.js). -->
+  <!-- 7. Closing: aliados + footer en un solo bloque. Con mouse, una copia
+       en color de acento de todo el contenido se muestra a través de un
+       círculo que sigue al cursor (la copia es un clon de .closing__layer
+       hecho por animations.js). -->
   <footer id="partners" class="closing" data-closing>
     <div class="closing__layer" data-closing-layer>
       <h2 class="closing__title">
@@ -308,12 +315,12 @@
       <div class="closing__bottom">
         <div class="closing__col">
           <span class="closing__label">Hablemos</span>
-          <!-- TODO: replace with the real Cal.com booking link. -->
+          <!-- TODO: reemplazar con el enlace real de reservas de Cal.com. -->
           <a class="closing__cta" href="#">Ponte en contacto</a>
         </div>
         <div class="closing__col">
           <span class="closing__label">Sígueme</span>
-          <!-- TODO: replace with real social profile links. -->
+          <!-- TODO: reemplazar con los enlaces reales de redes sociales. -->
           <ul class="closing__links">
             <li><a href="#">LinkedIn</a></li>
             <li><a href="#">Behance</a></li>
@@ -322,7 +329,7 @@
         </div>
         <div class="closing__col">
           <span class="closing__label">Legal</span>
-          <!-- TODO: /privacy and /terms don't exist yet. -->
+          <!-- TODO: /privacy y /terms todavía no existen. -->
           <ul class="closing__links">
             <li><a href="privacy.html">Política de privacidad</a></li>
             <li><a href="terms.html">Términos y condiciones</a></li>
@@ -336,13 +343,14 @@
     </div>
   </footer>
 
-  <!-- Portfolio content (services, projects, testimonials, partners): real
-       JSON, parsed with JSON.parse() in js/main.js. It lives inline here
-       instead of being a separate info.json fetched over the network, so
-       the site still opens by double-clicking index.html — browsers block
-       fetch()/XHR of local files under file:// (CORS), which a standalone
-       .json file would need a local server to get around. Edit the JSON
-       below directly; see js/main.js for what each field means. -->
+  <!-- Contenido del portafolio (servicios, proyectos, testimonios, aliados):
+       JSON real, parseado con JSON.parse() en js/main.js. Vive inline aquí
+       en lugar de ser un info.json separado obtenido por red, para que el
+       sitio siga abriendo con doble clic sobre index.html — los navegadores
+       bloquean fetch()/XHR de archivos locales bajo file:// (CORS), algo que
+       un .json independiente necesitaría un servidor local para evitar.
+       Edita el JSON de abajo directamente; ver js/main.js para el
+       significado de cada campo. -->
   <script id="info-data" type="application/json">
   {
     "services": [
@@ -424,18 +432,19 @@
   }
   </script>
 
-  <!-- GSAP via CDN — free for everyone since 3.13, including SplitText. -->
+  <!-- GSAP vía CDN — gratis para todos desde la versión 3.13, incluyendo SplitText. -->
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" defer></script>
-  <!-- Eased scroll when clicking in-page links (js/nav.js). -->
+  <!-- Scroll suavizado al hacer clic en enlaces internos de la página (js/nav.js). -->
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollToPlugin.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js" defer></script>
-  <!-- Momentum hover on the testimonial cards (optional: skipped if it fails to load). -->
+  <!-- Hover con momentum en las tarjetas de testimonios (opcional: se omite si falla al cargar). -->
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/InertiaPlugin.min.js" defer></script>
 
-  <!-- Classic scripts (not type="module") so the site also runs opened
-       directly from disk (file://), matching the rest of the repo. `defer`
-       keeps this exact execution order after parsing. -->
+  <!-- Scripts clásicos (sin type="module") para que el sitio también
+       funcione abierto directamente desde el disco (file://), igual que el
+       resto del repo. `defer` mantiene este orden exacto de ejecución
+       después de parsear el HTML. -->
   <script src="js/main.js" defer></script>
   <script src="js/theme.js" defer></script>
   <script src="js/nav.js" defer></script>

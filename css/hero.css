@@ -1,4 +1,4 @@
-/* Hero section: WebGL canvas + CSS fallback gradient behind it. */
+/* Sección hero: canvas WebGL + gradiente de respaldo en CSS detrás de él. */
 
 .hero {
   position: relative;
@@ -7,8 +7,8 @@
   align-items: center;
   padding-top: var(--space-7);
   overflow: hidden;
-  /* Fallback shown immediately and if WebGL is unavailable (see hero-shader.js). */
-  background: radial-gradient(circle at 30% 20%, #1c2318 0%, var(--color-bg) 55%);
+  /* Respaldo mostrado de inmediato y si WebGL no está disponible (ver hero-shader.js). */
+  background: radial-gradient(circle at 30% 20%, #241f10 0%, var(--color-bg) 55%);
 }
 
 .hero__canvas {
@@ -18,9 +18,9 @@
   height: 100%;
 }
 
-/* Scrim over the shader on the text side: the light bands drift behind
-   the copy, and at their brightest they'd wash out the paragraph. Also
-   fades the hero's bottom edge into the page background. */
+/* Velo sobre el shader del lado del texto: las bandas de luz se mueven
+   detrás del copy, y en su punto más brillante lavarían el párrafo.
+   También difumina el borde inferior del hero hacia el fondo de la página. */
 .hero::after {
   content: "";
   position: absolute;
@@ -47,13 +47,14 @@
 }
 
 .hero h1 {
-  color: var(--color-text);
+  /* Siempre sobre el shader oscuro, en ambos temas. */
+  color: #f5f5f5;
 }
 
 .hero__subtitle {
   max-width: 560px;
   font-size: 1.125rem;
-  /* Always on the dark shader, in both themes. */
+  /* Siempre sobre el shader oscuro, en ambos temas. */
   color: rgba(245, 245, 245, 0.85);
 }
 

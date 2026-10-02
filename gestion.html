@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
 
-  <!-- Anti-flash: apply the saved theme before first paint (same as index.html). -->
+  <!-- Anti-flash: aplica el tema guardado antes del primer renderizado (igual que en index.html). -->
   <script>
     (function () {
       try {
@@ -11,7 +11,7 @@
           document.documentElement.setAttribute("data-theme", "light");
         }
       } catch (e) {
-        /* localStorage unavailable — falls back to the default dark theme. */
+        /* localStorage no disponible — usa el tema oscuro por defecto. */
       }
     })();
   </script>
@@ -29,8 +29,9 @@
 
   <link rel="stylesheet" href="css/tokens.css" />
   <link rel="stylesheet" href="css/base.css" />
-  <!-- layout.css: only used here for .theme-toggle (the header's light/dark
-       button) — its nav/footer rules don't match anything on this page. -->
+  <!-- layout.css: se usa aquí solo para .theme-toggle (el botón de
+       claro/oscuro del header) — sus reglas de nav/footer no aplican a
+       nada en esta página. -->
   <link rel="stylesheet" href="css/layout.css" />
   <link rel="stylesheet" href="css/components.css" />
   <link rel="stylesheet" href="css/gestion.css" />
@@ -73,7 +74,7 @@
       <code>&lt;script id="info-data"&gt;</code> en <code>index.html</code>.
     </p>
 
-    <!-- 1. Services -->
+    <!-- 1. Servicios -->
     <section class="gestion-section" data-section="services">
       <h2>Servicios</h2>
       <ul class="gestion-list" data-list="services"></ul>
@@ -110,7 +111,7 @@
       </form>
     </section>
 
-    <!-- 2. Projects -->
+    <!-- 2. Proyectos -->
     <section class="gestion-section" data-section="projects">
       <h2>Proyectos</h2>
       <ul class="gestion-list" data-list="projects"></ul>
@@ -141,7 +142,7 @@
       </form>
     </section>
 
-    <!-- 3. Testimonials -->
+    <!-- 3. Testimonios -->
     <section class="gestion-section" data-section="testimonials">
       <h2>Testimonios</h2>
       <ul class="gestion-list" data-list="testimonials"></ul>
@@ -168,7 +169,7 @@
       </form>
     </section>
 
-    <!-- 4. Partners -->
+    <!-- 4. Aliados (partners) -->
     <section class="gestion-section" data-section="partners">
       <h2>Partners</h2>
       <div class="gestion-chip-row" data-partners-chips></div>
@@ -183,7 +184,7 @@
       <p class="gestion-form__status" data-form-status data-section-status="partners" aria-live="polite"></p>
     </section>
 
-    <!-- Output -->
+    <!-- Salida -->
     <section class="gestion-output">
       <h2>JSON generado</h2>
       <div class="gestion-output__actions">
