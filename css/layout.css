@@ -24,9 +24,32 @@
   color: var(--color-text);
 }
 
-.logomark svg {
-  width: 20px;
-  height: 20px;
+/* Logo (J) sin fondo: solo la marca flotando arriba a la izquierda. */
+.logomark {
+  padding: var(--space-1);
+  background: none;
+  border: 0;
+  border-radius: 0;
+}
+
+.logomark__img {
+  display: block;
+  width: auto;
+  height: 46px;
+  transition: transform 0.4s var(--ease-default);
+}
+
+/* Por defecto (fondo oscuro) se ve el logo blanco; js/logo-tone.js pone
+   data-tone="light" cuando detrás hay un fondo claro y entonces se ve el negro. */
+.logomark__img--light { display: none; }
+
+.logomark[data-tone="light"] .logomark__img--dark { display: none; }
+.logomark[data-tone="light"] .logomark__img--light { display: block; }
+
+.logomark:hover .logomark__img { transform: rotate(-6deg) scale(1.08); }
+
+@media (prefers-reduced-motion: reduce) {
+  .logomark__img { transition: none; }
 }
 
 /* --- Nav tipo "pill" de escritorio, fija centrada abajo ---
@@ -162,6 +185,64 @@ footer:focus {
   font-size: var(--fs-small);
   text-decoration: none;
   white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  transition: transform 0.35s var(--ease-default), box-shadow 0.35s var(--ease-default);
+}
+
+/* Brillo diagonal que cruza el botón al pasar el mouse. */
+.nav-pill__cta::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.55) 50%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform 0.6s var(--ease-default);
+  pointer-events: none;
+}
+
+/* Flecha ↗ que se revela y se desplaza (usa currentColor, sirve en claro y oscuro). */
+.nav-pill__cta::after {
+  content: "";
+  width: 0;
+  height: 14px;
+  margin-left: 0;
+  background-color: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17L17 7M8 7h9v9'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17L17 7M8 7h9v9'/%3E%3C/svg%3E") center / contain no-repeat;
+  opacity: 0;
+  transition: width 0.35s var(--ease-default), margin-left 0.35s var(--ease-default),
+    opacity 0.35s var(--ease-default), transform 0.35s var(--ease-default);
+}
+
+.nav-pill__cta:hover,
+.nav-pill__cta:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(255, 214, 10, 0.3);
+  outline: none;
+}
+
+.nav-pill__cta:hover::before,
+.nav-pill__cta:focus-visible::before { transform: translateX(0); }
+
+.nav-pill__cta:hover::after,
+.nav-pill__cta:focus-visible::after {
+  width: 14px;
+  margin-left: 6px;
+  opacity: 1;
+  transform: translate(2px, -2px);
+}
+
+.nav-pill__cta:active { transform: translateY(0) scale(0.98); box-shadow: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-pill__cta,
+  .nav-pill__cta::before,
+  .nav-pill__cta::after { transition: none; }
 }
 
 .theme-toggle {
@@ -174,6 +255,53 @@ footer:focus {
   border-radius: 50%;
   background: var(--color-bg-elevated-2);
   color: var(--color-text);
+}
+
+/* Animación del botón de tema: hover (sube, se llena de acento, el ícono gira)
+   y un giro del ícono al cambiar entre claro y oscuro. */
+.theme-toggle,
+.nav-pill .theme-toggle {
+  transition: transform 0.35s var(--ease-default), box-shadow 0.35s var(--ease-default),
+    background-color 0.35s var(--ease-default), color 0.35s var(--ease-default);
+}
+
+.theme-toggle:hover,
+.theme-toggle:focus-visible,
+.nav-pill .theme-toggle:hover,
+.nav-pill .theme-toggle:focus-visible {
+  background: var(--color-accent);
+  color: var(--color-accent-text);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(255, 214, 10, 0.3);
+  outline: none;
+}
+
+.theme-toggle:hover svg,
+.theme-toggle:focus-visible svg {
+  transform: rotate(30deg) scale(1.15);
+}
+
+.theme-toggle:active {
+  transform: translateY(0) scale(0.92);
+  box-shadow: none;
+}
+
+.theme-toggle .icon-sun,
+.theme-toggle .icon-moon {
+  transition: transform 0.45s var(--ease-default);
+  animation: theme-icon-in 0.55s var(--ease-default);
+}
+
+@keyframes theme-icon-in {
+  from { opacity: 0; transform: rotate(-120deg) scale(0.4); }
+  to { opacity: 1; transform: rotate(0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle,
+  .theme-toggle svg { transition: none; }
+  .theme-toggle .icon-sun,
+  .theme-toggle .icon-moon { animation: none; }
 }
 
 .theme-toggle svg {

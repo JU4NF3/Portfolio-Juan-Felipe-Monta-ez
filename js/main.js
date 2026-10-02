@@ -85,32 +85,49 @@
   // una imagen principal grande y una imagen lateral más pequeña. Cada
   // .work-media recibe el reveal con clip-path de animations.js y el zoom
   // en hover desde CSS.
+  // Imagen del proyecto (project.images[i], con project.positions[i] como
+  // object-position); si no hay imagen, cae al bloque placeholder con iniciales.
+  function mediaHTML(project, i, alt) {
+    var src = project.images && project.images[i];
+    if (!src) {
+      var initials = project.initials || project.title.slice(0, 2).toUpperCase();
+      return i === 0
+        ? '<div class="media-placeholder" role="img" aria-label="Marcador de imagen del proyecto — ' +
+            project.title + '">' + initials + "</div>"
+        : '<div class="media-placeholder media-placeholder--alt">' + initials + "</div>";
+    }
+    var pos = (project.positions && project.positions[i]) || "50% 50%";
+    return '<img src="' + encodeURI(src) + '" alt="' + (alt ? alt.replace(/"/g, "&quot;") : "") +
+      '" loading="lazy" decoding="async" style="object-position:' + pos + '">';
+  }
+
   function renderWorks(projects) {
     var worksGrid = document.querySelector("[data-works-grid]");
     if (!worksGrid || !projects) return;
     projects.forEach(function (project) {
-      var href = "#"; // TODO: enlazar a /work/[case] cuando existan las páginas de casos.
+      // Enlace externo del proyecto (project.url). Sin url, los enlaces quedan sin destino.
+      var hasUrl = !!project.url;
+      var href = hasUrl ? project.url : "";
+      var linkAttrs = hasUrl ? ' href="' + href + '" target="_blank" rel="noopener noreferrer"' : "";
       var row = el("article", "work-row");
       row.innerHTML =
         '<div class="work-row__head">' +
         '<span class="work-row__tag">' + project.category + "</span>" +
         '<h3 class="work-row__title">' + project.title + "</h3>" +
-        '<a class="work-row__link" href="' + href + '">Ver proyecto</a>' +
+        (hasUrl ? '<a class="work-row__link"' + linkAttrs + ">Ver proyecto</a>" : "") +
         "</div>" +
         '<p class="work-row__summary">' + project.summary + "</p>" +
         '<div class="work-row__media">' +
         // Imagen principal: el enlace accesible hacia el caso de estudio.
-        '<a class="work-media work-media--main" href="' + href + '" aria-label="' +
-        project.title + ' — ver caso de estudio">' +
+        '<a class="work-media work-media--main"' + linkAttrs + ' aria-label="' +
+        project.title + (hasUrl ? " — ver proyecto (se abre en una pestaña nueva)" : "") + '">' +
         '<div class="work-media__inner">' +
-        // TODO: reemplazar el placeholder por una captura <img> real.
-        '<div class="media-placeholder" role="img" aria-label="Marcador de imagen del proyecto — ' +
-        project.title + '">' + project.initials + "</div>" +
+        mediaHTML(project, 0, project.title) +
         "</div></a>" +
         // Imagen lateral: enlace duplicado, oculto para tecnología de asistencia y del orden de tabulación.
-        '<a class="work-media work-media--side" href="' + href + '" aria-hidden="true" tabindex="-1">' +
+        '<a class="work-media work-media--side"' + linkAttrs + ' aria-hidden="true" tabindex="-1">' +
         '<div class="work-media__inner">' +
-        '<div class="media-placeholder media-placeholder--alt">' + project.initials + "</div>" +
+        mediaHTML(project, 1, "") +
         "</div></a>" +
         "</div>";
       worksGrid.appendChild(row);

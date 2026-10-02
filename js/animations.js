@@ -292,6 +292,20 @@ window.PortfolioAnimations = (function () {
     var ctaText = document.querySelector("[data-split-cta]");
     if (ctaText) scrubWords(ctaText, "top 85%", "bottom 50%");
 
+    // Título de Contacto: las letras van apareciendo una a una con el scroll.
+    var charsText = document.querySelector("[data-split-chars]");
+    if (charsText) {
+      var charSplit = new SplitText(charsText, { type: "words,chars" });
+      gsap.set(charSplit.chars, { opacity: 0.12, y: 14 });
+      gsap.to(charSplit.chars, {
+        opacity: 1,
+        y: 0,
+        stagger: 0.035,
+        ease: "none",
+        scrollTrigger: { trigger: charsText, start: "top 88%", end: "bottom 55%", scrub: true },
+      });
+    }
+
     // Entrada escalonada genérica para cualquier sección marcada con
     // [data-reveal-group]: cada hijo directo se anima una vez, al entrar por primera vez.
     document.querySelectorAll("[data-reveal-group]").forEach(function (group) {

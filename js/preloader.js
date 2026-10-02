@@ -18,6 +18,7 @@
     var rounded = Math.round(progress.value);
     countEl.textContent = rounded + "%";
     if (progressBar) progressBar.setAttribute("aria-valuenow", String(rounded));
+    preloader.style.setProperty("--progress", String(progress.value));
   }
 
   function hidePreloader() {

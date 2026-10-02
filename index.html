@@ -27,7 +27,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&family=Montserrat:wght@300;400;500;600;700&family=Poppins:wght@500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=Instrument+Serif:ital@1&family=Montserrat:wght@300;400;500;600;700&family=Poppins:wght@500;600;700&display=swap"
     rel="stylesheet"
   />
 
@@ -43,6 +43,10 @@
 
   <!-- Preloader: contador de % manejado por js/preloader.js. -->
   <div class="preloader" data-preloader>
+    <div class="preloader__logo" aria-hidden="true">
+      <img class="preloader__logo-img preloader__logo-img--ghost" src="Imagenes/Mi%20logo/logo-blanco.png" alt="" width="459" height="513" />
+      <img class="preloader__logo-img preloader__logo-img--fill" src="Imagenes/Mi%20logo/logo-blanco.png" alt="" width="459" height="513" />
+    </div>
     <span class="preloader__label">Cargando</span>
     <span
       class="preloader__count"
@@ -75,12 +79,9 @@
          page-transition + preloader mediante una recarga real. TODO: cuando
          existan /work, /about, etc., apuntar también los demás enlaces
          internos aquí y agregarles [data-page-transition]. -->
-    <a class="logomark" href="index.html" data-page-transition>
-      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" />
-        <path d="M8 12h8M12 8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-      </svg>
-      Juanfe
+    <a class="logomark" href="index.html" data-page-transition aria-label="Juan Felipe Montañez — inicio">
+      <img class="logomark__img logomark__img--dark" src="Imagenes/Mi%20logo/logo-blanco.png" alt="" width="459" height="513" />
+      <img class="logomark__img logomark__img--light" src="Imagenes/Mi%20logo/logo-negro.png" alt="" width="459" height="513" />
     </a>
 
     <!-- Escritorio: nav tipo "pill" fija, centrada abajo. -->
@@ -113,8 +114,7 @@
         </svg>
         <span class="sr-only">Cambiar entre tema claro y oscuro</span>
       </button>
-      <!-- TODO: reemplazar con el enlace real de reservas de Cal.com. -->
-      <a class="nav-pill__cta" href="#">Agendar una llamada</a>
+      <a class="nav-pill__cta" href="#contact">Contáctame</a>
     </nav>
 
     <!-- Móvil: un solo botón "Abrir menú" que reemplaza la nav tipo "pill". -->
@@ -166,8 +166,7 @@
           </svg>
           <span class="sr-only">Cambiar entre tema claro y oscuro</span>
         </button>
-        <!-- TODO: reemplazar con el enlace real de reservas de Cal.com. -->
-        <a class="btn btn-primary" href="#">Agendar una llamada</a>
+        <a class="btn btn-primary" href="#contact">Contáctame</a>
       </div>
     </div>
   </header>
@@ -185,8 +184,7 @@
           todo lo relacionado con el modelado 3D.
         </p>
         <div class="hero__actions">
-          <!-- TODO: reemplazar con el enlace real de reservas de Cal.com. -->
-          <a class="btn btn-primary" href="#" data-hero-fade>Agendar una llamada</a>
+          <a class="btn btn-primary" href="#contact" data-hero-fade>Contáctame</a>
           <a class="btn btn-ghost" href="#works" data-hero-fade>Ver mi trabajo</a>
         </div>
       </div>
@@ -270,7 +268,45 @@
       </div>
     </section>
 
-    <!-- 5. CTA hacia works -->
+    <!-- 5. Tools (herramientas) -->
+    <section id="tools" class="tools">
+      <div class="container">
+        <div class="tools-header">
+          <h2>Herramientas que utilizo</h2>
+          <p>Mi stack de diseño y desarrollo para crear experiencias excepcionales</p>
+        </div>
+        <div data-reveal-group>
+        <div class="tools-grid">
+          <div class="tool-card">
+            <svg class="tool-card__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10.53 10.73c-.1-.31-.19-.61-.29-.92-.1-.31-.19-.6-.27-.89-.08-.28-.15-.54-.22-.78h-.02c-.09.43-.2.86-.34 1.29-.15.48-.3.98-.46 1.48-.14.51-.29.98-.44 1.4h2.54c-.06-.211-.14-.46-.23-.721-.09-.269-.18-.559-.27-.859zM19.75.3H4.25C1.9.3 0 2.2 0 4.55v14.9c0 2.35 1.9 4.25 4.25 4.25h15.5c2.35 0 4.25-1.9 4.25-4.25V4.55C24 2.2 22.1.3 19.75.3zM14.7 16.83h-2.091c-.069.01-.139-.04-.159-.11l-.82-2.38H7.91l-.76 2.35c-.02.09-.1.15-.19.141H5.08c-.11 0-.14-.061-.11-.18L8.19 7.38c.03-.1.06-.21.1-.33.04-.21.06-.43.06-.65-.01-.05.03-.1.08-.11h2.59c.08 0 .12.03.13.08l3.65 10.3c.03.109 0 .16-.1.16zm3.4-.15c0 .11-.039.16-.129.16H16.01c-.1 0-.15-.061-.15-.16v-7.7c0-.1.041-.14.131-.14h1.98c.09 0 .129.05.129.14v7.7zm-.209-9.03c-.231.24-.571.37-.911.35-.33.01-.65-.12-.891-.35-.23-.25-.35-.58-.34-.92-.01-.34.12-.66.359-.89.242-.23.562-.35.892-.35.391 0 .689.12.91.35.22.24.34.56.33.89.01.34-.11.67-.349.92z"/></svg>
+            <h3 class="tool-card__label">Adobe Illustrator</h3>
+          </div>
+          <div class="tool-card">
+            <svg class="tool-card__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9.85 8.42c-.37-.15-.77-.21-1.18-.2-.26 0-.49 0-.68.01-.2-.01-.34 0-.41.01v3.36c.14.01.27.02.39.02h.53c.39 0 .78-.06 1.15-.18.32-.09.6-.28.82-.53.21-.25.31-.59.31-1.03.01-.31-.07-.62-.23-.89-.17-.26-.41-.46-.7-.57zM19.75.3H4.25C1.9.3 0 2.2 0 4.55v14.899c0 2.35 1.9 4.25 4.25 4.25h15.5c2.35 0 4.25-1.9 4.25-4.25V4.55C24 2.2 22.1.3 19.75.3zm-7.391 11.65c-.399.56-.959.98-1.609 1.22-.68.25-1.43.34-2.25.34-.24 0-.4 0-.5-.01s-.24-.01-.43-.01v3.209c.01.07-.04.131-.11.141H5.52c-.08 0-.12-.041-.12-.131V6.42c0-.07.03-.11.1-.11.17 0 .33 0 .56-.01.24-.01.49-.01.76-.02s.56-.01.87-.02c.31-.01.61-.01.91-.01.82 0 1.5.1 2.06.31.5.17.96.45 1.34.82.32.32.57.71.73 1.14.149.42.229.85.229 1.3.001.86-.199 1.57-.6 2.13zm7.091 3.89c-.28.4-.671.709-1.12.891-.49.209-1.09.318-1.811.318-.459 0-.91-.039-1.359-.129-.35-.061-.7-.17-1.02-.32-.07-.039-.121-.109-.111-.189v-1.74c0-.029.011-.07.041-.09.029-.02.06-.01.09.01.39.23.8.391 1.24.49.379.1.779.15 1.18.15.38 0 .65-.051.83-.141.16-.07.27-.24.27-.42 0-.141-.08-.27-.24-.4-.16-.129-.489-.279-.979-.471-.51-.18-.979-.42-1.42-.719-.31-.221-.569-.51-.761-.85-.159-.32-.239-.67-.229-1.021 0-.43.12-.84.341-1.21.25-.4.619-.72 1.049-.92.469-.239 1.059-.349 1.769-.349.41 0 .83.03 1.24.09.3.04.59.12.86.23.039.01.08.05.1.09.01.04.02.08.02.12v1.63c0 .04-.02.08-.05.1-.09.02-.14.02-.18 0-.3-.16-.62-.27-.96-.34-.37-.08-.74-.13-1.12-.13-.2-.01-.41.02-.601.07-.129.03-.24.1-.31.2-.05.08-.08.18-.08.27s.04.18.101.26c.09.11.209.2.34.27.229.12.47.23.709.33.541.18 1.061.43 1.541.73.33.209.6.49.789.83.16.318.24.67.23 1.029.011.471-.129.94-.389 1.331z"/></svg>
+            <h3 class="tool-card__label">Adobe Photoshop</h3>
+          </div>
+          <div class="tool-card">
+            <svg class="tool-card__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M15.852 8.981h-4.588V0h4.588c2.476 0 4.49 2.014 4.49 4.49s-2.014 4.491-4.49 4.491zM12.735 7.51h3.117c1.665 0 3.019-1.355 3.019-3.019s-1.355-3.019-3.019-3.019h-3.117V7.51zm0 1.471H8.148c-2.476 0-4.49-2.014-4.49-4.49S5.672 0 8.148 0h4.588v8.981zm-4.587-7.51c-1.665 0-3.019 1.355-3.019 3.019s1.354 3.02 3.019 3.02h3.117V1.471H8.148zm4.587 15.019H8.148c-2.476 0-4.49-2.014-4.49-4.49s2.014-4.49 4.49-4.49h4.588v8.98zM8.148 8.981c-1.665 0-3.019 1.355-3.019 3.019s1.355 3.019 3.019 3.019h3.117V8.981H8.148zM8.172 24c-2.489 0-4.515-2.014-4.515-4.49s2.014-4.49 4.49-4.49h4.588v4.441c0 2.503-2.047 4.539-4.563 4.539zm-.024-7.51a3.023 3.023 0 0 0-3.019 3.019c0 1.665 1.365 3.019 3.044 3.019 1.705 0 3.093-1.376 3.093-3.068v-2.97H8.148zm7.704 0h-.098c-2.476 0-4.49-2.014-4.49-4.49s2.014-4.49 4.49-4.49h.098c2.476 0 4.49 2.014 4.49 4.49s-2.014 4.49-4.49 4.49zm-.097-7.509c-1.665 0-3.019 1.355-3.019 3.019s1.355 3.019 3.019 3.019h.098c1.665 0 3.019-1.355 3.019-3.019s-1.355-3.019-3.019-3.019h-.098z"/></svg>
+            <h3 class="tool-card__label">Figma</h3>
+          </div>
+          <div class="tool-card">
+            <svg class="tool-card__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 0h16v8h-8zM4 8h8l8 8H4zM4 16h8v8z"/></svg>
+            <h3 class="tool-card__label">Framer</h3>
+          </div>
+          <div class="tool-card">
+            <svg class="tool-card__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.51 13.214c.046-.8.438-1.506 1.03-2.006a3.424 3.424 0 0 1 2.212-.79c.85 0 1.631.3 2.211.79.592.5.983 1.206 1.028 2.005.045.823-.285 1.586-.865 2.153a3.389 3.389 0 0 1-2.374.938 3.393 3.393 0 0 1-2.376-.938c-.58-.567-.91-1.33-.865-2.152M7.35 14.831c.006.314.106.922.256 1.398a7.372 7.372 0 0 0 1.593 2.757 8.227 8.227 0 0 0 2.787 2.001 8.947 8.947 0 0 0 3.66.76 8.964 8.964 0 0 0 3.657-.772 8.285 8.285 0 0 0 2.785-2.01 7.428 7.428 0 0 0 1.592-2.762 6.964 6.964 0 0 0 .25-3.074 7.123 7.123 0 0 0-1.016-2.779 7.764 7.764 0 0 0-1.852-2.043h.002L13.566 2.55l-.02-.015c-.492-.378-1.319-.376-1.86.002-.547.382-.609 1.015-.123 1.415l-.001.001 3.126 2.543-9.53.01h-.013c-.788.001-1.545.518-1.695 1.172-.154.665.38 1.217 1.2 1.22V8.9l4.83-.01-8.62 6.617-.034.025c-.813.622-1.075 1.658-.563 2.313.52.667 1.625.668 2.447.004L7.414 14s-.069.52-.063.831zm12.09 1.741c-.97.988-2.326 1.548-3.795 1.55-1.47.004-2.827-.552-3.797-1.538a4.51 4.51 0 0 1-1.036-1.622 4.282 4.282 0 0 1 .282-3.519 4.702 4.702 0 0 1 1.153-1.371c.942-.768 2.141-1.183 3.396-1.185 1.256-.002 2.455.41 3.398 1.175.48.391.87.854 1.152 1.367a4.28 4.28 0 0 1 .522 1.706 4.236 4.236 0 0 1-.239 1.811 4.54 4.54 0 0 1-1.035 1.626"/></svg>
+            <h3 class="tool-card__label">Blender</h3>
+          </div>
+          <div class="tool-card">
+            <svg class="tool-card__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.15 2.587L18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.128a.999.999 0 0 0-1.276.057L.327 7.261A1 1 0 0 0 .326 8.74L3.899 12 .326 15.26a1 1 0 0 0 .001 1.479L1.65 17.94a.999.999 0 0 0 1.276.057l4.12-3.128 9.46 8.63a1.492 1.492 0 0 0 1.704.29l4.942-2.377A1.5 1.5 0 0 0 24 20.06V3.939a1.5 1.5 0 0 0-.85-1.352zm-5.146 14.861L10.826 12l7.178-5.448v10.896z"/></svg>
+            <h3 class="tool-card__label">Visual Studio Code</h3>
+          </div>
+        </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5b. CTA hacia works -->
     <section id="works-cta" class="works-cta">
       <div class="container">
         <div class="works-cta__inner">
@@ -297,9 +333,50 @@
         <div class="testimonial-fan" data-testimonials-grid></div>
       </div>
     </section>
+
+    <!-- 7. Contact (contacto) -->
+    <section id="contact" class="contact">
+      <div class="container">
+        <div class="contact-info">
+          <h4 class="contact-info__title" data-split-chars>Escríbeme para hacer tu próximo proyecto</h4>
+          <div class="contact-info__grid" data-reveal-group>
+            <div class="contact-info__item">
+              <h5>Teléfono</h5>
+              <a href="tel:+573183455235">+57 318 345 5235</a>
+            </div>
+            <div class="contact-info__item">
+              <h5>Email</h5>
+              <a href="mailto:juanfepipe.2227@gmail.com">juanfepipe.2227@gmail.com</a>
+            </div>
+            <div class="contact-info__item">
+              <h5>Ubicación</h5>
+              <p>Bogotá, Colombia</p>
+            </div>
+          </div>
+        </div>
+
+        <form class="contact-form" id="contact-form">
+          <div class="form-group">
+            <label for="name">Nombre</label>
+            <input type="text" id="name" name="name" placeholder="Tu nombre" maxlength="256" />
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Tu email" maxlength="256" required />
+          </div>
+          <div class="form-group">
+            <label for="message">Mensaje</label>
+            <textarea id="message" name="message" placeholder="Tu mensaje..." maxlength="256" required></textarea>
+          </div>
+          <input type="checkbox" name="botcheck" class="contact-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true" />
+          <button type="submit" class="contact-btn">Enviar mensaje</button>
+          <p class="contact-status" data-contact-status role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
   </main>
 
-  <!-- 7. Closing: aliados + footer en un solo bloque. Con mouse, una copia
+  <!-- 8. Closing: aliados + footer en un solo bloque. Con mouse, una copia
        en color de acento de todo el contenido se muestra a través de un
        círculo que sigue al cursor (la copia es un clon de .closing__layer
        hecho por animations.js). -->
@@ -387,48 +464,76 @@
     ],
     "projects": [
       {
-        "title": "Northwind Banking App",
-        "category": "UI/UX · Fintech",
-        "summary": "Rediseño de un flujo de banca móvil para reducir el abandono en el onboarding.",
-        "initials": "NB"
+        "title": "ReNova",
+      "url": "https://indigo-line-264055.framer.app/",
+        "category": "Identidad de marca",
+        "summary": "Identidad de marca y logotipo para una firma de consultoría que integra estrategia, finanzas y talento.",
+        "images": [
+          "Imagenes/Renova/Captura de pantalla 2026-10-02 102429.png",
+          "Imagenes/Renova/Recurso 5-20.jpg"
+        ],
+        "positions": [
+          "50% 50%",
+          "50% 50%"
+        ]
       },
       {
-        "title": "Loop Studio Rebrand",
-        "category": "Identidad de Marca",
-        "summary": "Refresco completo de identidad para un estudio de diseño de motion.",
-        "initials": "LS"
+        "title": "Global Seguros",
+      "url": "https://sebastianp08.github.io/GH2026_UniversidadElBosque_Harkan_GlobalSeguros/",
+        "category": "UI/UX · Landing page",
+        "summary": "Landing page para un seguro de vida que garantiza la carrera universitaria de los hijos.",
+        "images": [
+          "Imagenes/Global Seguros/600426909-0f9840a0-eff7-4d61-95d9-2226825bee3e.png",
+          "Imagenes/Global Seguros/600427002-1bf8542d-c1f8-4f94-960a-7e8290d2ecb2.png"
+        ],
+        "positions": [
+          "50% 50%",
+          "80% 50%"
+        ]
       },
       {
-        "title": "Halo Product Launch",
-        "category": "WebGL · Motion",
-        "summary": "Landing page interactiva en WebGL para el lanzamiento de un producto de hardware.",
-        "initials": "HP"
+        "title": "Ascent Zero",
+        "category": "Videojuego · UI y 3D",
+        "summary": "Menú principal y arte 3D para un videojuego, con una antorcha modelada en Blender.",
+        "images": [
+          "Imagenes/Ascent - Zero/Group 17.png",
+          "Imagenes/Ascent - Zero/Captura de pantalla 2026-10-02 105701.png"
+        ],
+        "positions": ["0% 50%", "50% 50%"]
       },
       {
-        "title": "Atlas Dashboard",
-        "category": "UI/UX · SaaS",
-        "summary": "Rediseño de un dashboard denso en datos para una plataforma de logística.",
-        "initials": "AD"
+        "title": "Altra Inversiones",
+      "url": "https://altrainv.com/",
+        "category": "Diseño web · Sitio corporativo",
+        "summary": "Sitio web corporativo para una firma de inversión: identidad, contenido y estrategias.",
+        "images": [
+          "Imagenes/Altra/Captura de pantalla 2026-10-02 105846.png",
+          "Imagenes/Altra/Captura de pantalla 2026-10-02 105935.png"
+        ],
+        "positions": [
+          "50% 50%",
+          "30% 40%"
+        ]
       }
     ],
     "testimonials": [
       {
-        "quote": "Juanfe convirtió un brief vago en una interfaz que a nuestros usuarios realmente les gusta usar.",
-        "name": "Alex Rivera",
-        "role": "Founder, Northwind"
+        "quote": "Juan Felipe entendió lo que ReNova quería proyectar y lo convirtió en una identidad de marca clara y profesional. Hoy nuestra imagen nos representa con seguridad frente a los clientes.",
+        "name": "Jaime Alberto García",
+        "role": "Gerente y Fundador, ReNova"
       },
       {
-        "quote": "El sistema de marca que construyó es lo primero que los nuevos empleados elogian.",
-        "name": "Priya Shah",
-        "role": "Head of Product, Loop Studio"
+        "quote": "Trabajar con Juan Felipe fue muy fácil: escuchó lo que necesitábamos, propuso ideas con criterio y entregó a tiempo. Nuestra imagen ahora transmite la confianza que buscábamos.",
+        "name": "Luis Eduardo Suárez",
+        "role": "Gerente y Director, Les Asesores Contables"
       },
       {
-        "quote": "Rápido, comunicativo, y el trabajo de motion subió la conversión de nuestro lanzamiento.",
-        "name": "Marco Dinelli",
-        "role": "CEO, Halo"
+        "quote": "Contraté a Juan Felipe para el sitio web de Altra Inversiones y superó mis expectativas: un diseño sobrio y elegante, con compromiso y buena comunicación durante todo el proceso.",
+        "name": "Nicolás Montañez",
+        "role": "Contratante del sitio web de Altra Inversiones"
       }
     ],
-    "partners": ["Northwind", "Loop Studio", "Halo", "Atlas", "Ventures Lab"]
+    "partners": ["ReNova", "Les Asesores Contables", "Altra"]
   }
   </script>
 
@@ -446,8 +551,10 @@
        resto del repo. `defer` mantiene este orden exacto de ejecución
        después de parsear el HTML. -->
   <script src="js/main.js" defer></script>
+  <script src="js/contact.js" defer></script>
   <script src="js/theme.js" defer></script>
   <script src="js/nav.js" defer></script>
+  <script src="js/logo-tone.js" defer></script>
   <script src="js/hero-shader.js" defer></script>
   <script src="js/page-transition.js" defer></script>
   <script src="js/animations.js" defer></script>

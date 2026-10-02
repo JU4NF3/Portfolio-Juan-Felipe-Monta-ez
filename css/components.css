@@ -756,6 +756,13 @@
   pointer-events: none;
 }
 
+/* Las tarjetas de la órbita tienen alto fijo (31rem); con textos largos la cita
+   a tamaño completo se salía por abajo, así que aquí va un poco más pequeña. */
+.testimonial-fan--orbit .testimonial-card blockquote {
+  font-size: 1.3rem;
+  line-height: 1.32;
+}
+
 .testimonial-fan--orbit .testimonial-card {
   position: absolute;
   top: 22rem; /* centro vertical del abanico */
@@ -910,6 +917,336 @@
   }
 }
 
+/* --- Contact (contacto) — réplica del formulario de INKSPIRE --- */
+.contact {
+  padding: 0 0 150px;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: "Inter Tight", var(--font-body);
+}
+
+.contact .container {
+  display: grid;
+  gap: 100px;
+}
+
+.contact-info__title {
+  margin: 0;
+  font-size: 30px;
+  line-height: 1.34;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--color-text);
+}
+
+.contact-info__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 30px;
+  margin-top: 40px;
+}
+
+.contact-info__item h5 {
+  margin: 0 0 12px;
+  font-size: 22px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--color-text);
+}
+
+.contact-info__item a,
+.contact-info__item p {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: color 0.35s var(--ease-default);
+}
+
+.contact-info__item a,
+.contact-info__item p {
+  display: inline-block;
+  overflow-wrap: anywhere;
+  background: linear-gradient(var(--color-accent), var(--color-accent)) left bottom / 0 2px no-repeat;
+  padding-bottom: 4px;
+  transition: color 0.35s var(--ease-default), transform 0.35s var(--ease-default),
+    background-size 0.45s var(--ease-default);
+}
+
+.contact-info__item h5 { transition: color 0.35s var(--ease-default); }
+
+.contact-info__item:hover h5 { color: var(--color-accent); }
+
+.contact-info__item a:hover,
+.contact-info__item a:focus-visible,
+.contact-info__item:hover p {
+  color: var(--color-text);
+  transform: translateX(8px);
+  background-size: 100% 2px;
+  outline: none;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+/* Cada campo: la barra amarilla (::after) se dibuja de izquierda a derecha
+   sobre la línea al enfocar, y la etiqueta se tiñe de acento. */
+.form-group {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.form-group::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--color-accent);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.5s var(--ease-default);
+  pointer-events: none;
+}
+
+.form-group:focus-within::after { transform: scaleX(1); }
+
+.form-group label {
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--color-text);
+  transition: color 0.35s var(--ease-default), transform 0.35s var(--ease-default);
+}
+
+.form-group:focus-within label {
+  color: var(--color-accent);
+  transform: translateX(6px);
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  height: 48px;
+  padding: 10px 10px 8px;
+  border: 0;
+  border-bottom: 1px solid var(--color-text);
+  border-radius: 0;
+  background: transparent;
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: 18px;
+  outline: none;
+  transition: padding-left 0.35s var(--ease-default), background-color 0.35s var(--ease-default);
+}
+
+.form-group textarea {
+  height: 128px;
+  padding-bottom: 90px;
+  resize: none;
+}
+
+.form-group input:hover,
+.form-group textarea:hover {
+  background-color: color-mix(in srgb, var(--color-text) 4%, transparent);
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  padding-left: 18px;
+  background-color: color-mix(in srgb, var(--color-accent) 7%, transparent);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: var(--color-text-muted);
+  opacity: 1;
+  transition: opacity 0.35s var(--ease-default), transform 0.35s var(--ease-default);
+}
+
+.form-group input:focus::placeholder,
+.form-group textarea:focus::placeholder {
+  opacity: 0.35;
+}
+
+/* Botón: la flecha usa currentColor (negra sobre blanco, negra sobre amarillo). */
+.contact-btn {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 58.6px;
+  padding: 16px 27px;
+  border: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: var(--color-text);
+  color: var(--color-bg);
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.35s var(--ease-default), color 0.35s var(--ease-default),
+    transform 0.35s var(--ease-default), box-shadow 0.35s var(--ease-default);
+}
+
+.contact-btn::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 68%;
+  width: 24px;
+  height: 24px;
+  margin-top: -12px;
+  background-color: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17L17 7M8 7h9v9'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17L17 7M8 7h9v9'/%3E%3C/svg%3E") center / contain no-repeat;
+  transition: transform 0.35s var(--ease-default);
+}
+
+.contact-btn:hover,
+.contact-btn:focus-visible {
+  background-color: var(--color-accent);
+  color: var(--color-accent-text);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(255, 214, 10, 0.28);
+  outline: none;
+}
+
+.contact-btn:hover::after,
+.contact-btn:focus-visible::after {
+  transform: translate(6px, -6px);
+}
+
+.contact-btn:active {
+  transform: translateY(0) scale(0.99);
+  box-shadow: none;
+}
+
+.contact-honeypot { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+
+.contact-btn:disabled { opacity: 0.6; cursor: progress; transform: none; box-shadow: none; }
+
+.contact-status {
+  margin: 0;
+  min-height: 1.5em;
+  font-size: 16px;
+  color: var(--color-text-muted);
+}
+
+.contact-status[data-type="success"] { color: var(--color-accent); }
+.contact-status[data-type="error"] { color: #ff6b6b; }
+
+@media (max-width: 768px) {
+  .contact { padding-bottom: 100px; }
+  .contact .container { gap: 60px; }
+  .contact-info__grid { grid-template-columns: 1fr; }
+  .contact-info__title { font-size: 24px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-info__item a,
+  .contact-info__item p,
+  .form-group::after,
+  .form-group label,
+  .form-group input,
+  .form-group textarea,
+  .contact-btn,
+  .contact-btn::after { transition: none; }
+}
+
+/* --- Tools (herramientas) --- */
+.tools {
+  padding: var(--space-8) 0;
+  background: var(--color-bg);
+}
+
+.tools-header {
+  text-align: center;
+  margin-bottom: var(--space-7);
+}
+
+.tools-header h2 {
+  font-size: var(--fs-h2);
+  margin-bottom: var(--space-3);
+  color: var(--color-text);
+}
+
+.tools-header p {
+  font-size: var(--fs-body);
+  color: var(--color-text-muted);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Cuadrícula de herramientas — réplica de las tarjetas sociales de kstoimenov.com:
+   celdas unidas por líneas de 1px, esquinas redondeadas y hover con degradado. */
+.tools-grid {
+  --tools-stroke: color-mix(in srgb, var(--color-text) 28%, transparent);
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 1px;
+  border: 1px solid var(--tools-stroke);
+  border-radius: 12.5px;
+  background: var(--tools-stroke);
+  overflow: hidden;
+}
+
+.tool-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 190px;
+  padding: 24px;
+  background: var(--color-bg);
+  color: var(--color-text);
+  transition: background-color 0.3s var(--ease-default);
+}
+
+.tool-card__icon {
+  width: 44px;
+  height: 44px;
+  transition: color 0.3s var(--ease-default), transform 0.4s var(--ease-default);
+}
+
+.tool-card__label {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.3;
+  letter-spacing: 0.01em;
+  color: inherit;
+  transition: color 0.3s var(--ease-default);
+}
+
+.tool-card:hover {
+  background: linear-gradient(135deg, var(--color-accent) 0%, #ffe970 100%);
+  color: var(--color-accent-text);
+}
+
+.tool-card:hover .tool-card__icon { transform: translateY(-3px) rotate(-4deg); }
+
+@media (max-width: 1024px) {
+  .tools-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 768px) {
+  .tools { padding: var(--space-6) 0; }
+  .tools-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tool-card { min-height: 175px; padding: 20px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tool-card, .tool-card__icon { transition: none; }
+}
+
 /* --- Preloader (pantalla de carga) --- */
 .preloader {
   position: fixed;
@@ -927,6 +1264,48 @@
 .preloader[data-hidden="true"] {
   opacity: 0;
   pointer-events: none;
+}
+
+/* Logo del preloader: una copia tenue de fondo y otra que se "llena" de abajo
+   hacia arriba según el % de carga (--progress, lo pone preloader.js). El PNG
+   es blanco; en tema claro se invierte a negro. */
+.preloader__logo {
+  position: relative;
+  width: 84px;
+  height: 94px;
+  margin-bottom: var(--space-2);
+  transition: transform 0.6s var(--ease-default);
+}
+
+.preloader__logo-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+[data-theme="light"] .preloader__logo-img { filter: invert(1); }
+
+.preloader__logo-img--ghost {
+  opacity: 0.16;
+  animation: preloader-logo-pulse 1.6s ease-in-out infinite;
+}
+
+.preloader__logo-img--fill {
+  clip-path: inset(calc(100% - var(--progress, 0) * 1%) 0 0 0);
+}
+
+@keyframes preloader-logo-pulse {
+  0%, 100% { opacity: 0.12; transform: scale(1); }
+  50% { opacity: 0.24; transform: scale(1.04); }
+}
+
+.preloader[data-hidden="true"] .preloader__logo { transform: scale(1.18); }
+
+@media (prefers-reduced-motion: reduce) {
+  .preloader__logo-img--ghost { animation: none; }
+  .preloader__logo { transition: none; }
 }
 
 .preloader__count {
