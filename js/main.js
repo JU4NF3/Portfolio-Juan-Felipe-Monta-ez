@@ -132,6 +132,34 @@
         "</div>";
       worksGrid.appendChild(row);
     });
+
+    // Cada marco toma la proporción real de su imagen, para que se vea
+    // completa (sin recortes) en cualquier tamaño de pantalla.
+    var refreshTimer;
+    worksGrid.querySelectorAll(".work-media img").forEach(function (img) {
+      function fit() {
+        if (!img.naturalWidth) return;
+        var media = img.closest(".work-media");
+        media.style.aspectRatio = img.naturalWidth + " / " + img.naturalHeight;
+        media.classList.add("work-media--fit");
+        // En escritorio, columnas proporcionales a la proporción de cada
+        // imagen: así la principal y la lateral quedan del mismo alto.
+        var row = media.parentNode;
+        var ratios = Array.prototype.map.call(row.querySelectorAll(".work-media img"), function (im) {
+          return im.naturalWidth ? im.naturalWidth / im.naturalHeight : 0;
+        });
+        if (ratios.length === 2 && ratios[0] && ratios[1]) {
+          row.style.setProperty("--work-cols", ratios[0].toFixed(4) + "fr " + ratios[1].toFixed(4) + "fr");
+        }
+        // La altura cambió: recalcular las posiciones de ScrollTrigger.
+        clearTimeout(refreshTimer);
+        refreshTimer = setTimeout(function () {
+          if (window.ScrollTrigger) window.ScrollTrigger.refresh();
+        }, 150);
+      }
+      if (img.complete) fit();
+      else img.addEventListener("load", fit);
+    });
   }
 
   // --- Testimonials ---

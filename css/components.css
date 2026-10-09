@@ -541,8 +541,11 @@
 
 .work-row__media {
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  /* main.js define --work-cols según la proporción de cada imagen, para
+     que en escritorio ambas queden del mismo alto sin recortarse. */
+  grid-template-columns: var(--work-cols, 2fr 1fr);
   gap: var(--space-4);
+  align-items: start;
 }
 
 /* --- Media de Works: reveal con clip-path + zoom en hover ---
@@ -642,6 +645,13 @@
   .work-media--side {
     height: 120px;
   }
+}
+
+/* Marco ajustado a la proporción real de la imagen (main.js): la imagen
+   se ve completa en cualquier pantalla, sin recortes. Va después del
+   bloque móvil para ganarle a su alto fijo. */
+.work-media--fit {
+  height: auto;
 }
 
 .media-placeholder {
@@ -789,6 +799,13 @@
   color: var(--closing-text);
 }
 
+/* El footer ya deja su propio espacio para la nav fija (padding de
+   .closing__layer), así que el padding inferior del body sobra y se veía
+   como una franja debajo del cierre. */
+body:has(> .closing) {
+  padding-bottom: 0;
+}
+
 .closing__layer {
   display: flex;
   flex-direction: column;
@@ -873,6 +890,39 @@
 
 .closing__cta {
   font-size: var(--fs-h3);
+}
+
+/* Logo grande del cierre: el PNG se usa como máscara y se pinta con
+   currentColor, así hereda el color de cada capa (texto o acento). */
+.closing__logo {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-7);
+  overflow: hidden; /* recorta el logo mientras sube desde abajo */
+}
+
+.closing__logo-mark {
+  display: block;
+  height: clamp(8rem, 24vw, 20rem);
+  aspect-ratio: 459 / 513;
+  background-color: currentColor;
+  -webkit-mask: url("../Imagenes/Mi%20logo/logo-blanco.png") center / contain no-repeat;
+  mask: url("../Imagenes/Mi%20logo/logo-blanco.png") center / contain no-repeat;
+  transition:
+    transform 1.4s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 1s ease-out;
+}
+
+/* Armado por animations.js (solo con movimiento permitido): el logo espera
+   debajo de su marco y sube cuando el footer entra en vista. */
+.closing--logo-reveal .closing__logo-mark {
+  transform: translateY(100%);
+  opacity: 0;
+}
+
+.closing--logo-reveal.is-logo-in .closing__logo-mark {
+  transform: translateY(0);
+  opacity: 1;
 }
 
 /* Copia "spotlight": mismo layout encima, color de acento, máscara circular. */

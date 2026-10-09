@@ -423,6 +423,24 @@ window.PortfolioAnimations = (function () {
         });
       });
     }
+
+    // Logo del footer: sube desde abajo al llegar al cierre. Transición CSS
+    // en ambas capas (normal y spotlight), igual que el media de works.
+    var closing = document.querySelector("[data-closing]");
+    var closingLogo = closing && closing.querySelector(".closing__logo");
+    if (closingLogo) {
+      closing.classList.add("closing--logo-reveal");
+      ScrollTrigger.create({
+        trigger: closingLogo,
+        // Cuando el logo ya está bien dentro de la pantalla, para que la
+        // subida se vea completa (no mientras apenas asoma por abajo).
+        start: "top 70%",
+        once: true,
+        onEnter: function () {
+          closing.classList.add("is-logo-in");
+        },
+      });
+    }
   }
 
   if (hasGsap) {
@@ -459,6 +477,8 @@ window.PortfolioAnimations = (function () {
           if (worksList) worksList.classList.remove("works-list--reveal");
           var statement = document.querySelector("[data-statement]");
           if (statement) statement.classList.remove("statement--animated");
+          var closing = document.querySelector("[data-closing]");
+          if (closing) closing.classList.remove("closing--logo-reveal");
           if (testimonialsMedia) {
             testimonialsMedia.revert();
             testimonialsMedia = null;
